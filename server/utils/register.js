@@ -7,12 +7,13 @@ const organisationService= new OrganisationService();
 const UserService=require('../features/users/userService')
 const userService=new UserService();
 module.exports = async (req, res, next) => {
-    const{firstName,lastName, userName, organisationName, email, password}=req.body;
-    if(!userName||!email||!password || !organisationName){
+    
+    const{firstName,lastName, userName, organisationName, emailId, password}=req.body;
+    if(!userName||!emailId||!password || !organisationName){
         throw new CustomAPIError('Please provide required credentials',400)
     }
     const hashed_password=await bcrypt.hash(password,10)
-    const user=await userService.createUser(firstName, lastName, userName, organisationName, email, hashed_password);
+    const user=await userService.createUser(firstName, lastName, userName, organisationName, emailId, hashed_password);
     const organisation= await organisationService.createOrganisation(organisationName, user.userId);
     if(!user || !organisation){
         throw new customAPIError('Please provide required credentials',400)

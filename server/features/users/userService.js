@@ -11,18 +11,13 @@ class UserService {
         }
         return user;
     }
-    createUser = async (user) => {
-        const user = await this.userRepository.getUserByEmail(email);
-        if (!user) {
-            throw new Error('User already exists');
-        }
+    createUser = async (firstName, lastName, userName, organisationName, emailId, hashed_password) => {
+        // const user = await this.userRepository.getUserByEmail(emailId);
+        // if (!user) {
+        //     throw new Error('User already exists');
+        // }
         const createdUser = await this.userRepository.createUser(
-            userData.userName,
-            userData.firstName,
-            userData.lastName,
-            userData.emailId,
-            userData.isAdmin,
-            userData.organisationId
+          firstName,lastName,userName,organisationName, emailId, hashed_password
         );
 
         return createdUser;
