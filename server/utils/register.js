@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
         throw new CustomAPIError('Please provide required credentials',400)
     }
     const hashed_password=await bcrypt.hash(password,10)
-    const user=await userService.createUser(firstName, lastName, userName, organisationName, emailId, hashed_password);
+    const user=await userService.createUser(firstName, lastName, userName, emailId,true, hashed_password);
     const organisation= await organisationService.createOrganisation(organisationName, user.userId);
     if(!user || !organisation){
         throw new customAPIError('Please provide required credentials',400)

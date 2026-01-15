@@ -11,13 +11,13 @@ class UserService {
         }
         return user;
     }
-    createUser = async (firstName, lastName, userName, organisationName, emailId, hashed_password) => {
-        // const user = await this.userRepository.getUserByEmail(emailId);
-        // if (!user) {
-        //     throw new Error('User already exists');
-        // }
+    createUser = async (userName, firstName, lastName,  emailId,isAdmin, hashed_password) => {
+        const user = await this.userRepository.getUserByEmail(emailId);
+        if (user) {
+            throw new Error('User already exists');
+        }
         const createdUser = await this.userRepository.createUser(
-          firstName,lastName,userName,organisationName, emailId, hashed_password
+          userName,firstName,lastName, emailId,isAdmin, hashed_password
         );
 
         return createdUser;

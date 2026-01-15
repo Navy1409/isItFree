@@ -13,7 +13,7 @@ class userRepository {
       console.log(query.text, query.values);
       
     const result = await pool.query(query.text, query.values);
-    return result.rows[0];
+    return result.rows.length;
   };
 
   createUser = async (
@@ -21,19 +21,21 @@ class userRepository {
     firstName,
     lastName,
     emailId,
-    isAdmin,
-    organisationId
+    isAdmin=false,
+    password=null,
+       organisationId=null
   ) => {
     const query = squel
       .insert()
       .into("users")
-      .set("emailId", emailId)
-      .set("userName", userName)
-      .set("firstName", firstName)
-      .set("lastName", lastName)
-      .set("isAdmin", isAdmin)
-      .set("organisationId", organisationId)
-      .returning("id")
+      .set('"emailId"', emailId)
+      .set('"userName"', userName)
+      .set('"firstName"', firstName)
+      .set('"lastName"', lastName)
+      .set('"isAdmin"', isAdmin)
+      .set('"organisationId"', organisationId)
+      .set("password", password)
+      .returning('"userId"')
       .toParam();
 
     return await pool.query(query.text, query.values);
