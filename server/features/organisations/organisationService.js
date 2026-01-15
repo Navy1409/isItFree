@@ -1,0 +1,18 @@
+const CustomAPIError = require("../../errors/customError");
+const OrganisationRepository = require("./organisationRepository");
+
+
+class organisationService{
+    constructor(){
+        this.OrganisationRepository=new OrganisationRepository()
+    }
+    async createOrganisation(organisationName, userId){
+        if(!organisationName || !userId){
+            throw new CustomAPIError('Please provide required credentials',400);
+        }
+        
+        let response= this.OrganisationRepository.createOrganisation(organisationName, userId);
+        return response[0];
+    }
+}
+module.exports=organisationService;
