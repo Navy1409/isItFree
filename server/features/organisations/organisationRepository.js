@@ -6,8 +6,9 @@ class organisationRepository{
         const query= squel
         .insert()
         .into("organisations")
-        .set("organisationName",organisationName)
-        .set("adminId", adminId)
+        .set('"name"',organisationName)
+        .set('"adminId"', adminId)
+        .returning('"organisationId"')
         .toParam();
 
         const result=await pool.query(query.text, query.values);

@@ -7,12 +7,12 @@ class organisationService{
         this.OrganisationRepository=new OrganisationRepository()
     }
     async createOrganisation(organisationName, userId){
-        if(!organisationName || !userId){
-            throw new CustomAPIError('Please provide required credentials',400);
-        }
+        // if(!organisationName || !userId){
+        //     throw new CustomAPIError('Please provide required credentials',400);
+        // }
         
-        let response= this.OrganisationRepository.createOrganisation(organisationName, userId);
-        return response[0];
+        let response= await this.OrganisationRepository.createOrganisation(organisationName, userId);
+        return response;
     }
 }
 module.exports=organisationService;

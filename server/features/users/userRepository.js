@@ -10,10 +10,10 @@ class userRepository {
       .where('u."emailId" = ?', email)
       .toParam();
 
-      console.log(query.text, query.values);
-      
+    console.log(query.text, query.values);
+
     const result = await pool.query(query.text, query.values);
-    return result.rows.length;
+    return result.rows;
   };
 
   createUser = async (
@@ -21,9 +21,9 @@ class userRepository {
     firstName,
     lastName,
     emailId,
-    isAdmin=false,
-    password=null,
-       organisationId=null
+    isAdmin = false,
+    password = null,
+    organisationId = null
   ) => {
     const query = squel
       .insert()
@@ -38,7 +38,19 @@ class userRepository {
       .returning('"userId"')
       .toParam();
 
-    return await pool.query(query.text, query.values);
+    const result = await pool.query(query.text, query.values);
+    return result.rows[0];
+  };
+
+  loginUpdate = async (userId, organisationId) => {
+    const query = squel
+      .update()
+          .table('users')  
+      .set('"organisationId"', organisationId)
+      .where('"userId= ?"', userId)
+      .toParam();
+    const result = await pool.query(query.text, query.values);
+    return "Success";
   };
 }
 

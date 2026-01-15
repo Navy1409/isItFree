@@ -13,7 +13,7 @@ class UserService {
     }
     createUser = async (userName, firstName, lastName,  emailId,isAdmin, hashed_password) => {
         const user = await this.userRepository.getUserByEmail(emailId);
-        if (user) {
+        if (user.length) {
             throw new Error('User already exists');
         }
         const createdUser = await this.userRepository.createUser(
@@ -21,6 +21,11 @@ class UserService {
         );
 
         return createdUser;
+    }
+
+    loginUpdate = async(userId,organisationId) =>{
+        const response= await this.userRepository.loginUpdate(userId, organisationId)
+        return response;
     }
 }
 module.exports = UserService
