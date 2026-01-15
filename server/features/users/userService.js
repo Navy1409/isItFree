@@ -1,8 +1,8 @@
-import UserRepository from './userRepository';
+const UserRepository = require("./userRepository");
 
 class UserService {
-    constructor(context) {
-        this.userRepository = new UserRepository(context)
+    constructor() {
+        this.userRepository= new UserRepository();
     }
     getUserByEmail = async (email) => {
         const user = await this.userRepository.getUserByEmail(email);
