@@ -13,6 +13,30 @@ class organisationRepository{
         const result=await pool.query(query.text, query.values);
         return result.rows[0].organisationId;
     }
+    async getOrganisationName(organisationId){
+        const query = squel
+  .select()
+  .from('"organisations"')
+  .field('"organisationName"')
+  .where('"organisationId" = ?', organisationId)
+  .toParam();
+
+
+        const result = await pool.query(query.text, query.values);
+        return result.rows[0];
+    }
+    async updateOrganisationName(organisationId, organisationName){        
+        const query= squel
+        .update()
+        .table('organisations')
+        .set('"organisationName"',organisationName)
+        .where('"organisationId"=?',organisationId)
+        .returning('"organisationName"')
+        .toParam()
+
+        const result= await pool.query(query.text, query.values);
+        return result.rows[0];
+    }
     
 }
 module.exports=organisationRepository;

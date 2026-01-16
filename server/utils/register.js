@@ -33,9 +33,9 @@ module.exports = async (req, res, next) => {
       firstName,
       lastName,
       emailId,
+      organisation,
       true,
       hashed_password,
-      organisation
     );
 
     await pgClient.query("COMMIT");

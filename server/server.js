@@ -2,6 +2,7 @@ const express= require('express');
 const db=require('./db/connect');
 const authRoutes= require('./routes/authRoute')
 const userRoutes= require('./routes/userRoute')
+const organisationRoutes=require('./routes/organisations.route')
 
 const app=express();
 
@@ -14,5 +15,6 @@ app.listen(3000, () => {
 app.use(express.json());  
 
 app.use('/auth',authRoutes)
+app.use('/organisations',organisationRoutes);
 app.use('/user',userRoutes)
 

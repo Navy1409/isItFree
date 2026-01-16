@@ -33,9 +33,9 @@ class userRepository {
     firstName,
     lastName,
     emailId,
+    organisationId ,
     isAdmin = false,
     password = null,
-    organisationId
   ) => {
     const query = squel
       .insert()
