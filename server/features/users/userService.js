@@ -1,31 +1,41 @@
 const UserRepository = require("./userRepository");
 
 class UserService {
-    constructor() {
-        this.userRepository= new UserRepository();
+  constructor() {
+    this.userRepository = new UserRepository();
+  }
+  getUserByEmail = async (email) => {
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user) {
+      return false;
     }
-    getUserByEmail = async (email) => {
-        const user = await this.userRepository.getUserByEmail(email);
-        if (!user) {
-            return false;
-        }
-        return user;
+    return user;
+  };
+  createUser = async (
+    userName,
+    firstName,
+    lastName,
+    emailId,
+    isAdmin,
+    hashed_password,
+    organisationId
+  ) => {
+    const user = await this.userRepository.getUserByEmail(emailId);
+    if (user.length) {
+      throw new Error("User already exists");
     }
-    createUser = async (userName, firstName, lastName,  emailId,isAdmin, hashed_password) => {
-        const user = await this.userRepository.getUserByEmail(emailId);
-        if (user.length) {
-            throw new Error('User already exists');
-        }
-        const createdUser = await this.userRepository.createUser(
-          userName,firstName,lastName, emailId,isAdmin, hashed_password
-        );
+    const createdUser = await this.userRepository.createUser(
+      userName,
+      firstName,
+      lastName,
+      emailId,
+      isAdmin,
+      hashed_password,
+      organisationId
+    );
 
-        return createdUser;
-    }
+    return createdUser;
+  };
 
-    loginUpdate = async(userId,organisationId) =>{
-        const response= await this.userRepository.loginUpdate(userId, organisationId)
-        return response;
-    }
 }
-module.exports = UserService
+module.exports = UserService;

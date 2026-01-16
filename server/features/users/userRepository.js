@@ -23,7 +23,7 @@ class userRepository {
     emailId,
     isAdmin = false,
     password = null,
-    organisationId = null
+    organisationId 
   ) => {
     const query = squel
       .insert()
@@ -42,16 +42,6 @@ class userRepository {
     return result.rows[0];
   };
 
-  loginUpdate = async (userId, organisationId) => {
-    const query = squel
-      .update()
-          .table('users')  
-      .set('"organisationId"', organisationId)
-      .where('"userId= ?"', userId)
-      .toParam();
-    const result = await pool.query(query.text, query.values);
-    return "Success";
-  };
 }
 
 module.exports = userRepository;
