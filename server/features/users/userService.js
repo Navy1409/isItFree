@@ -28,8 +28,8 @@ class UserService {
             userName, firstName, lastName, emailId,organisationId, isAdmin,hashed_password
         );
 
-        return createdUser;
-    }
+    return createdUser;
+  };
 
     async loginUpdate(userId, organisationId) {
         const response = await this.userRepository.loginUpdate(userId, organisationId)
@@ -55,4 +55,4 @@ class UserService {
 
     }
 }
-module.exports = UserService
+module.exports = UserService;

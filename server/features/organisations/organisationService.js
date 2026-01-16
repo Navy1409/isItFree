@@ -6,12 +6,12 @@ class organisationService{
     constructor(){
         this.OrganisationRepository=new OrganisationRepository()
     }
-    async createOrganisation(organisationName, userId){
-        // if(!organisationName || !userId){
-        //     throw new CustomAPIError('Please provide required credentials',400);
-        // }
+    async createOrganisation(organisationName){
+        if(!organisationName){
+            throw new CustomAPIError('Please provide required credentials',400);
+        }
         
-        let response= await this.OrganisationRepository.createOrganisation(organisationName, userId);
+        let response= await this.OrganisationRepository.createOrganisation(organisationName);
         return response;
     }
 }
