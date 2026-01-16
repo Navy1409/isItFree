@@ -5,13 +5,25 @@ class userRepository {
   getUserByEmail = async (email) => {
     const query = squel
       .select()
-      .from("users", "u")
-      .field("u.*")
-      .where('u."emailId" = ?', email)
+      .from("users")
+      .where('"emailId" = ?', email)
       .toParam();
 
-    console.log(query.text, query.values);
 
+    const result = await pool.query(query.text, query.values);
+    return result.rows.length;
+  };
+
+  getUserById = async (id) => {
+    const query = squel
+      .select()
+      .from("users")
+      .field('"userName"')
+      .field('"firstName"')
+      .field('"lastName"')
+      .field('"emailId"')
+      .where('"userId" = ?', id)
+      .toParam();
     const result = await pool.query(query.text, query.values);
     return result.rows;
   };
@@ -35,13 +47,36 @@ class userRepository {
       .set('"isAdmin"', isAdmin)
       .set('"organisationId"', organisationId)
       .set("password", password)
-      .returning('"userId"')
       .toParam();
 
     const result = await pool.query(query.text, query.values);
     return result.rows[0];
   };
 
+
+  updateUser = async (userId, update) => {
+    const query = squel.update().table("users");
+    Object.entries(update).forEach(([key, value]) => {
+      query.set(`"${key}"`, value)
+    });
+    query.where('"userId" = ?', userId)
+      .returning('"userId"')
+      .toParam();
+    const { text, values } = query.toParam();
+    const result = await pool.query(text, values);
+    return result.rows[0] ? 'Success' : "Failed";
+  }
+
+  deleteUser = async (userId) => {
+    const query = squel
+      .delete()
+      .from('users')
+      .where('"userId" = ?', userId)
+      .toParam();
+
+    const result = await pool.query(query.text, query.values);
+    return result;
+  }
 }
 
 module.exports = userRepository;
