@@ -29,9 +29,9 @@ module.exports = async (req, res, next) => {
       organisationName
     );
     const user = await userService.createUser(
+      userName,
       firstName,
       lastName,
-      userName,
       emailId,
       true,
       hashed_password,
@@ -43,7 +43,7 @@ module.exports = async (req, res, next) => {
       throw new CustomAPIError("Please provide required credentials", 400);
     }
     const token = jwt.sign(
-      { id: user.id, organisation_id: organisation, isAdmin: user.isAdmin },
+      { id: user.userId, organisation_id: organisation, isAdmin: user.isAdmin },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );

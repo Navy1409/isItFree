@@ -35,7 +35,7 @@ class userRepository {
     emailId,
     isAdmin = false,
     password = null,
-    organisationId 
+    organisationId
   ) => {
     const query = squel
       .insert()
@@ -47,6 +47,8 @@ class userRepository {
       .set('"isAdmin"', isAdmin)
       .set('"organisationId"', organisationId)
       .set("password", password)
+      .returning('"userId"')
+      .returning('"isAdmin"')
       .toParam();
 
     const result = await pool.query(query.text, query.values);
