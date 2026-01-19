@@ -6,12 +6,13 @@ class userRepository {
     const query = squel
       .select()
       .from("users")
+      .field("password")
       .where('"emailId" = ?', email)
       .toParam();
 
 
     const result = await pool.query(query.text, query.values);
-    return result.rows.length;
+    return result.rows;
   };
 
   getUserById = async (id) => {

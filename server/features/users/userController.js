@@ -17,7 +17,7 @@ class UserController {
     async getUserByEmail(req, res) {
         const { emailId } = req.params
         const user = await this.userService.getUserByEmail(emailId);
-        if (!user) {
+        if (!user.length) {
             return false;
         }
         res.status(200).json(user)

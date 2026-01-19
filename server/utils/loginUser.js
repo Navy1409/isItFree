@@ -5,16 +5,16 @@ const {StatusCodes}=require('http-status-codes')
 
 
 class LoginUser {
-    constructor(context) {
-        this.userService= UserService(context)
+    constructor() {
+        this.userService= new UserService()
     }
     login= async (req , res)=>{
-    const {email, passsword}=req.body;
-    const user= this.userService.getUserByEmail(email);
+    const {emailId, password}=req.body;
+    const user=await this.userService.getUserByEmail(emailId);
     if(!user){
         throw new Error('User does not exist');
     }
-    const ok= await bcrypt.compare(user.passsword, passsword);
+    const ok= await bcrypt.compare( password,user[0].password);
     if(!ok){
         throw new Error('Password does not match')
     }
