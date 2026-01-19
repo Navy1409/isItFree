@@ -54,5 +54,12 @@ class UserService {
         return result;
 
     }
+    async getUserByOrganisationId(organisationId){        
+        const users= await this.userRepository.getUserByOrganisationId(organisationId);
+        if(!users){
+            throw new CustomAPIError("Create users to see",400)
+        }
+        return users;
+    }
 }
 module.exports = UserService;

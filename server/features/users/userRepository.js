@@ -80,6 +80,21 @@ class userRepository {
     const result = await pool.query(query.text, query.values);
     return result;
   }
+  getUserByOrganisationId=async (organisationId)=>{
+    const query= squel
+    .select()
+    .from("users")
+    .field('"userName"')
+    .field('"firstName"')
+    .field('"lastName"')
+    .field('"emailId"')
+    .where('"organisationId"=?',organisationId)
+    .toParam();
+        
+    const result= await pool.query(query.text, query.values);
+    return result.rows;
+
+  }
 }
 
 module.exports = userRepository;
