@@ -18,7 +18,7 @@ class officeBookingsRepository {
     return result.rows[0];
   }
 
-  async getSeatBookingTimes({ officeId, bookingDate, row, column }) {
+  async getSeatBookingTimes(officeId, bookingDate, row, column) {
     const query = squel
       .select()
       .from("office_bookings")
@@ -34,7 +34,7 @@ class officeBookingsRepository {
     return result.rows;
   }
 
-  async getOfficeBookingTimes({officeId,bookingDate}){
+  async getOfficeBookingTimes(officeId,bookingDate){
     const query=squel
     .select()
     .from("office_bookings")
@@ -48,7 +48,7 @@ class officeBookingsRepository {
     return result.rows;
   }
 
-  async getUserGroupBookingTimes({ userId, bookingDate}) {
+  async getUserGroupBookingTimes(userId, bookingDate) {
     const query = squel
       .select()
       .from("office_bookings")
@@ -63,7 +63,7 @@ class officeBookingsRepository {
     const result = await pool.query(query.text, query.values);
     return result.rows; 
   }
-    async getUserSeatBookingTimes({ userId, bookingDate}) {
+    async getUserSeatBookingTimes(userId, bookingDate) {
     const query = squel
       .select()
       .from("office_bookings")
