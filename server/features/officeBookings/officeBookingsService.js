@@ -18,6 +18,29 @@ class OfficeBookingsService {
     endTime,
     config,
   ) {
+    const today = new Date().toISOString().slice(0, 10);
+
+    if (bookingDate < today || startTime > endTime) {
+      throw new CustomAPIError("please provide valid Date for booking", 400);
+    } else if (bookingDate === today) {
+      const nowTime = new Date().toISOString().slice(11, 16);
+      if (startTime < nowTime) {
+        throw new CustomAPIError("Please provide valid booking time", 400);
+      }
+    }
+
+    const office = await this.officeService.getOfficeByOfficeId(officeId);
+    const { openTime, closeTime } =
+      await this.organisationRepository.getOrganisationTimings(
+        office[0]?.organisationId,
+      );
+
+    if (startTime < openTime || endTime > closeTime) {
+      throw new CustomAPIError(
+        "The start and end time in bookings must be in between the organisation timings",
+      );
+    }
+
     const isAvailableForGroupBoookings =
       await this.officeService.getIsGroupByOfficeId(officeId);
 
@@ -25,7 +48,6 @@ class OfficeBookingsService {
     const isGroup = isAvailableForGroupBoookings[0]?.isGroup;
 
     if (isGroup) {
-
       if (userIds.length === 0) {
         throw new CustomAPIError("userIds must be a non-empty array", 400);
       }
@@ -46,9 +68,7 @@ class OfficeBookingsService {
 
       row = null;
       column = null;
-
     } else {
-
       if (userIds.length !== 1) {
         throw new CustomAPIError(
           "There should be only one user for single seat booking",
@@ -71,11 +91,9 @@ class OfficeBookingsService {
           409,
         );
       }
-
     }
     const results = [];
     for (const userId of userIds) {
-
       const userAvailable = await this.isUserAvailable(
         userId,
         bookingDate,
@@ -86,6 +104,7 @@ class OfficeBookingsService {
       if (!userAvailable) {
         throw new Error("The user is not available for the given booking", 409);
       }
+
 
       const booking = await this.officeBookingsRepository.createBookings({
         userId,
@@ -153,11 +172,7 @@ class OfficeBookingsService {
         bookingDate,
       );
 
-    const conflict = this.doesTimeOverlap(
-      existingBookings,
-      startTime,
-      endTime,
-    );
+    const conflict = this.doesTimeOverlap(existingBookings, startTime, endTime);
 
     return !conflict;
   }
@@ -194,11 +209,7 @@ class OfficeBookingsService {
         column,
       );
 
-    const conflict = this.doesTimeOverlap(
-      existingBookings,
-      startTime,
-      endTime,
-    );
+    const conflict = this.doesTimeOverlap(existingBookings, startTime, endTime);
 
     return !conflict;
   }
@@ -237,13 +248,19 @@ class OfficeBookingsService {
     start.setDate(today.getDate() - 7)
     const startDate = start.toISOString().slice(0, 10);
 
-    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId, startDate, endDate);
-
+    return await this.officeBookingsRepository.getAllBookingsByUserUUID(
+      userId,
+      startDate,
+      endDate,
+    );
   }
 
   async getCurrentBooking(userId) {
-    const startDate = new Date().toISOString().slice(0.10);
-    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId, startDate);
+    const startDate = new Date().toISOString().slice(0.1);
+    return await this.officeBookingsRepository.getAllBookingsByUserUUID(
+      userId,
+      startDate,
+    );
   }
 }
 
