@@ -1,0 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const OfficeBookingsController = require('../features/officeBookings/officeBookingsController');
+const officeBookingsController = new OfficeBookingsController();
+
+router.route('/getGroupRoomAvailability').get(officeBookingsController.getGroupOfficeAvailability);
+
+module.exports = router

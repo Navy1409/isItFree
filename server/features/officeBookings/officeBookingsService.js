@@ -1,11 +1,13 @@
 const CustomAPIError = require("../../errors/customError");
 const OfficeService = require("../office/officeSevice");
+const OrganisationRepository = require("../organisations/organisationRepository");
 const OfficeBookingsRepository = require("./officeBookingsRepository");
 
-class officeBookingsService {
+class OfficeBookingsService {
   constructor() {
     this.officeService = new OfficeService();
     this.officeBookingsRepository = new OfficeBookingsRepository();
+    this.organisationRepository = new OrganisationRepository();
   }
 
   async createBookings(
@@ -98,7 +100,33 @@ class officeBookingsService {
     return results;
   }
 
-  async isUserAvailable(userId, bookingDate, startTime, endTime, isGroup) {
+  async getGroupRoomAvailability(officeId, bookingDate) {
+    const existingBookings = await this.officeBookingsRepository.getOfficeBookingTimes( officeId, bookingDate )
+    const office = await this.officeService.getOfficeByOfficeId(officeId)
+    const { openTime, closeTime } = await this.organisationRepository.getOrganisationTimings(office[0]?.organisationId)
+    const availableBooking = []
+    let currentTime = openTime;
+    for (const booking of existingBookings) {
+      if (currentTime < booking.startTime) {
+        availableBooking.push({
+          startTime: currentTime,
+          endTime: booking.startTime
+        });
+      }
+      if (booking.endTime > currentTime) {
+        currentTime = booking.endTime;
+      }
+    }
+    if (currentTime < closeTime) {
+      availableBooking.push({
+        startTime: currentTime,
+        endTime: closeTime
+      });
+    }
+    return availableBooking;
+  }
+
+  async isUserAvailable({ userId, bookingDate, startTime, endTime, isGroup }) {
     const existingBookings = isGroup
       ? await this.officeBookingsRepository.getUserGroupBookingTimes(
           userId,
@@ -165,3 +193,5 @@ class officeBookingsService {
     });
   }
 }
+
+module.exports = OfficeBookingsService;

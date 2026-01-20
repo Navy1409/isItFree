@@ -8,12 +8,12 @@ class organisationService {
     }
     async createOrganisation(organisationName,
         open_time,
-        close_time) {
-        if (!organisationName || !open_time || !close_time) {
+        close_time, breakTime) {
+        if (!organisationName || !open_time || !close_time || !breakTime) {
             throw new CustomAPIError('Please provide required credentials', 400);
         }
 
-        let response = await this.organisationRepository.createOrganisation(organisationName, open_time, close_time);
+        let response = await this.organisationRepository.createOrganisation(organisationName, open_time, close_time, breakTime);
         return response;
     }
 
