@@ -1,5 +1,7 @@
 const UserService = require('./userService')
-const bcrypt = require('bcrypt')
+const OrganisationService=require('../organisations/organisationService')
+const bcrypt = require('bcrypt');
+const CustomAPIError = require('../../errors/customError');
 class UserController {
     constructor() {
         this.userService = new UserService()
@@ -12,7 +14,7 @@ class UserController {
     getUserByEmail = async (req, res) => {
         const { emailId } = req.params
         const user = await this.userService.getUserByEmail(emailId);
-        if (!user) {
+        if (!user.length) {
             return false;
         }
         res.status(200).json(user)
@@ -57,6 +59,16 @@ class UserController {
 
         const response = await this.userService.updateUser(userId, updates);
         res.status(200).json(response)
+    }
+    async getUserByOrganisationId(req, res){
+        const {organisationId}=req.params;
+
+        const organisation= await this.organisationService.getOrganisationName(organisationId);
+        if(!organisation){
+            throw new CustomAPIError('Invalid Credentials', 401)
+        }
+        const response=await this.userService.getUserByOrganisationId(organisationId);
+        res.status(200).json(response);
     }
 }
 

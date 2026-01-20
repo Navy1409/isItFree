@@ -7,7 +7,7 @@ class UserService {
     }
     async getUserByEmail(email) {
         const user = await this.userRepository.getUserByEmail(email);
-        if (!user) {
+        if (!user.length) {
             return false;
         }
         return user;
@@ -21,7 +21,7 @@ class UserService {
     }
     async createUser(userName, firstName, lastName, emailId,organisationId, isAdmin,hashed_password) {
         const user = await this.userRepository.getUserByEmail(emailId);
-        if (user) {
+        if (user.length) {
             throw new Error('User already exists');
         }
         const createdUser = await this.userRepository.createUser(
@@ -53,6 +53,13 @@ class UserService {
         const result = await this.userRepository.deleteUser(userId);
         return result;
 
+    }
+    async getUserByOrganisationId(organisationId){        
+        const users= await this.userRepository.getUserByOrganisationId(organisationId);
+        if(!users){
+            throw new CustomAPIError("Create users to see",400)
+        }
+        return users;
     }
 }
 module.exports = UserService;
