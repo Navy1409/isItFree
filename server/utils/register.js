@@ -18,15 +18,19 @@ module.exports = async (req, res, next) => {
       organisationName,
       emailId,
       password,
+      openTime,
+      closeTime
     } = req.body;
-    if (!userName || !emailId || !password || !organisationName) {
+    if (!userName || !emailId || !password || !organisationName || !openTime || !closeTime) {
       throw new CustomAPIError("Please provide required credentials", 400);
     }
 
     await pgClient.query("BEGIN");
     const hashed_password = await bcrypt.hash(password, 10);
     const organisation = await organisationService.createOrganisation(
-      organisationName
+      organisationName,
+      openTime,
+      closeTime
     );
     const user = await userService.createUser(
       userName,

@@ -5,21 +5,13 @@ const CustomAPIError = require('../../errors/customError');
 class UserController {
     constructor() {
         this.userService = new UserService()
-        this.organisationService= new OrganisationService();
-        this.createUser = this.createUser.bind(this);
-        this.getUserByEmail = this.getUserByEmail.bind(this);
-        this.getUserById = this.getUserById.bind(this);
-        this.deleteUser = this.deleteUser.bind(this);
-        this.editUser = this.editUser.bind(this);
-        this.getUserByOrganisationId =
-      this.getUserByOrganisationId.bind(this);
     }
-    async createUser(req, res) {
-        const { userName, firstName, lastName, emailId, organisationId} = req.body;
+    createUser = async (req, res) => {
+        const { userName, firstName, lastName, emailId, organisationId } = req.body;
         const user = await this.userService.createUser(userName, firstName, lastName, emailId, organisationId)
         res.status(200).json(user);
     }
-    async getUserByEmail(req, res) {
+    getUserByEmail = async (req, res) => {
         const { emailId } = req.params
         const user = await this.userService.getUserByEmail(emailId);
         if (!user.length) {
@@ -27,7 +19,7 @@ class UserController {
         }
         res.status(200).json(user)
     }
-    async getUserById(req, res) {
+    getUserById = async (req, res) => {
         const { userId } = req.params
         const user = await this.userService.getUserById(userId);
         if (!user) {
@@ -35,12 +27,12 @@ class UserController {
         }
         res.status(200).json(user)
     }
-    async deleteUser(req, res) {
+    deleteUser = async (req, res) => {
         const { userId } = req.params;
         const user = await this.userService.deleteUser(userId);
         res.status(200).json(user);
     }
-    async editUser(req, res) {
+    editUser = async (req, res) => {
         const ALLOWED_FIELDS = new Set([
             'userName',
             'firstName',
