@@ -26,7 +26,7 @@ class OfficeBookingsService {
 
     if (isGroup) {
 
-      if (!Array.isArray(userIds) || userIds.length === 0) {
+      if (userIds.length === 0) {
         throw new CustomAPIError("userIds must be a non-empty array", 400);
       }
 
@@ -49,7 +49,7 @@ class OfficeBookingsService {
 
     } else {
 
-      if (userIds.length > 1) {
+      if (userIds.length !== 1) {
         throw new CustomAPIError(
           "There should be only one user for single seat booking",
           409,
@@ -137,7 +137,7 @@ class OfficeBookingsService {
           bookingDate,
         );
 
-    const conflict = await this.doesTimeOverlap(
+    const conflict = this.doesTimeOverlap(
       existingBookings,
       startTime,
       endTime,
@@ -153,7 +153,7 @@ class OfficeBookingsService {
         bookingDate,
       );
 
-    const conflict = await this.doesTimeOverlap(
+    const conflict =this.doesTimeOverlap(
       existingBookings,
       startTime,
       endTime,
@@ -178,7 +178,7 @@ class OfficeBookingsService {
         column,
       );
 
-    const conflict = await this.doesTimeOverlap(
+    const conflict = this.doesTimeOverlap(
       existingBookings,
       startTime,
       endTime,
@@ -187,10 +187,26 @@ class OfficeBookingsService {
     return !conflict;
   }
 
-  async doesTimeOverlap(existingBookings, newStart, newEnd) {
+  doesTimeOverlap(existingBookings, newStart, newEnd) {
     return existingBookings.some(({ startTime, endTime }) => {
       return startTime < newEnd && endTime > newStart;
     });
+  }
+
+  async getBookingHistory(userId){
+    const today=new Date();
+    const endDate= today.toISOString().slice(0,10);
+    const start= new Date()
+    start.setDate(today.getDate()-7)
+    const startDate=start.toISOString().slice(0,10);
+
+    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId,startDate,endDate);
+
+  }
+
+  async getCurrentBooking(userId){
+    const startDate=new Date().toISOString().slice(0.10);
+    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId,startDate);
   }
 }
 

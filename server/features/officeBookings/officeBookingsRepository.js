@@ -63,7 +63,7 @@ class officeBookingsRepository {
     const result = await pool.query(query.text, query.values);
     return result.rows; 
   }
-    async getUserSeatBookingTimes(userId, bookingDate) {
+  async getUserSeatBookingTimes(userId, bookingDate) {
     const query = squel
       .select()
       .from("office_bookings")
@@ -77,6 +77,25 @@ class officeBookingsRepository {
 
     const result = await pool.query(query.text, query.values);
     return result.rows; 
+  }
+  async getAllBookingsByUserUUID(userId,startDate, endDate){
+    const query= squel
+    .select()
+    .from("office_bookings")
+    .field('"officeId"')
+    .field('"bookingDate"')
+    .field('"startTime"')
+    .field('"endTime"')
+    .field("config")
+    .where('"userId"=?',userId);
+
+    if(startDate)query.where('"bookingDate">=?',startDate);
+    if(endDate)query.where('"bookingDate"<=?',endDate);
+
+    query.toParam();
+
+    const result= await pool.query(query.text, query.values);
+    return result.rows;
   }
 }
 module.exports = officeBookingsRepository;
