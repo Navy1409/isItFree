@@ -27,24 +27,41 @@ class officeBookingsRepository {
       .where('"officeId" = ?', officeId)
       .where('"bookingDate" = ?', bookingDate)
       .where("config->>'row' = ?", row)
-      .where("config->>'column' = ?",column)
+      .where("config->>'column' = ?", column)
       .toParam();
 
     const result = await pool.query(query.text, query.values);
     return result.rows;
   }
 
-  async getOfficeBookingTimes(officeId,bookingDate){
-    const query=squel
-    .select()
-    .from("office_bookings")
-    .field('"startTime"')
-    .field('"endTime"')
-    .where('"officeId" = ?', officeId)
-    .where('"bookingDate" = ?', bookingDate)
-    .toParam();
+  async getBookedSeatsByOfficeIdDateAndTime(officeId, bookingDate, startTime, endTime) {
+    const query = squel
+      .select()
+      .from("office_bookings")
+      .field("(config->>'row')::int", "row")
+      .field("(config->>'column')::int", "column")
+      .where('"officeId" = ?', officeId)
+      .where('"bookingDate" = ?', bookingDate)
+      .where('"startTime" >= ?', startTime)
+      .where('"endTime" <= ?', endTime)
+      .where("(config->>'row') IS NOT NULL")
+      .where("(config->>'column') IS NOT NULL")
+      .toParam();
 
-    const result=await pool.query(query.text, query.values);
+    return (await pool.query(query.text, query.values)).rows
+  }
+
+  async getOfficeBookingTimes(officeId, bookingDate) {
+    const query = squel
+      .select()
+      .from("office_bookings")
+      .field('"startTime"')
+      .field('"endTime"')
+      .where('"officeId" = ?', officeId)
+      .where('"bookingDate" = ?', bookingDate)
+      .toParam();
+
+    const result = await pool.query(query.text, query.values);
     return result.rows;
   }
 
@@ -61,7 +78,7 @@ class officeBookingsRepository {
       .toParam();
 
     const result = await pool.query(query.text, query.values);
-    return result.rows; 
+    return result.rows;
   }
   async getUserSeatBookingTimes(userId, bookingDate) {
     const query = squel
@@ -76,7 +93,7 @@ class officeBookingsRepository {
       .toParam();
 
     const result = await pool.query(query.text, query.values);
-    return result.rows; 
+    return result.rows;
   }
   async getAllBookingsByUserUUID(userId,startDate, endDate){
     const query= squel

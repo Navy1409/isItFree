@@ -86,7 +86,7 @@ class OfficeBookingsService {
       if (!userAvailable) {
         throw new Error("The user is not available for the given booking", 409);
       }
-      
+
       const booking = await this.officeBookingsRepository.createBookings({
         userId,
         officeId,
@@ -100,42 +100,58 @@ class OfficeBookingsService {
     return results;
   }
 
-  async getGroupRoomAvailability(officeId, bookingDate) {
-    const existingBookings = await this.officeBookingsRepository.getOfficeBookingTimes( officeId, bookingDate )
+  async getOfficeVacancyByOfficeIdAndBookingDate(officeId, bookingDate) {
     const office = await this.officeService.getOfficeByOfficeId(officeId)
+    if (!office.length) {
+      throw new CustomAPIError("No such office Exists", 400);
+    }
     const { openTime, closeTime } = await this.organisationRepository.getOrganisationTimings(office[0]?.organisationId)
-    const availableBooking = []
-    let currentTime = openTime;
-    for (const booking of existingBookings) {
-      if (currentTime < booking.startTime) {
-        availableBooking.push({
-          startTime: currentTime,
-          endTime: booking.startTime
-        });
-      }
-      if (booking.endTime > currentTime) {
-        currentTime = booking.endTime;
-      }
+    const existingBookings = await this.officeBookingsRepository.getOfficeBookingTimes(officeId, bookingDate)
+    if (!existingBookings.length) {
+      return { openTime, closeTime };
     }
-    if (currentTime < closeTime) {
-      availableBooking.push({
-        startTime: currentTime,
-        endTime: closeTime
-      });
-    }
+    const availableBooking = this.getAvailability(openTime, closeTime, existingBookings)
     return availableBooking;
+  }
+
+  async getBookedSeatsByOfficeIdDateAndTime(officeId, date, half) {
+    const office = await this.officeService.getOfficeByOfficeId(officeId);
+    if (!office.length) {
+      throw new CustomAPIError("No such office Exists", 400);
+    }
+    const { openTime, closeTime, breakTime } = await this.organisationRepository.getOrganisationTimings(office[0]?.organisationId);
+    let startTime;
+    let endTime;
+    if (half === 'first half') {
+      startTime = openTime;
+      endTime = breakTime;
+    }
+    else if (half === 'second half') {
+      startTime = breakTime;
+      endTime = closeTime;
+    }
+    else if (half === 'full day') {
+      startTime = openTime;
+      endTime = closeTime
+    }
+    else {
+      throw new CustomAPIError("Select correct timings for seat booking", 400)
+    }
+    const result = await this.officeBookingsRepository.getBookedSeatsByOfficeIdDateAndTime(officeId, date, startTime, endTime)
+
+    return result;
   }
 
   async isUserAvailable({ userId, bookingDate, startTime, endTime, isGroup }) {
     const existingBookings = isGroup
       ? await this.officeBookingsRepository.getUserGroupBookingTimes(
-          userId,
-          bookingDate,
-        )
+        userId,
+        bookingDate,
+      )
       : await this.officeBookingsRepository.getUserBookingTimes(
-          userId,
-          bookingDate,
-        );
+        userId,
+        bookingDate,
+      );
 
     const conflict = this.doesTimeOverlap(
       existingBookings,
@@ -153,7 +169,7 @@ class OfficeBookingsService {
         bookingDate,
       );
 
-    const conflict =this.doesTimeOverlap(
+    const conflict = this.doesTimeOverlap(
       existingBookings,
       startTime,
       endTime,
@@ -193,20 +209,41 @@ class OfficeBookingsService {
     });
   }
 
-  async getBookingHistory(userId){
-    const today=new Date();
-    const endDate= today.toISOString().slice(0,10);
-    const start= new Date()
-    start.setDate(today.getDate()-7)
-    const startDate=start.toISOString().slice(0,10);
+  getAvailability(openTime, closeTime, existingBookings) {
+    let currentTime = openTime;
+    for (const booking of existingBookings) {
+      if (currentTime < booking.startTime) {
+        availableBooking.push({
+          startTime: currentTime,
+          endTime: booking.startTime
+        });
+      }
+      if (booking.endTime > currentTime) {
+        currentTime = booking.endTime;
+      }
+    }
+    if (currentTime < closeTime) {
+      availableBooking.push({
+        startTime: currentTime,
+        endTime: closeTime
+      });
+    }
+  }
 
-    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId,startDate,endDate);
+  async getBookingHistory(userId) {
+    const today = new Date();
+    const endDate = today.toISOString().slice(0, 10);
+    const start = new Date()
+    start.setDate(today.getDate() - 7)
+    const startDate = start.toISOString().slice(0, 10);
+
+    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId, startDate, endDate);
 
   }
 
-  async getCurrentBooking(userId){
-    const startDate=new Date().toISOString().slice(0.10);
-    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId,startDate);
+  async getCurrentBooking(userId) {
+    const startDate = new Date().toISOString().slice(0.10);
+    return await this.officeBookingsRepository.getAllBookingsByUserUUID(userId, startDate);
   }
 }
 
