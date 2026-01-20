@@ -36,7 +36,7 @@ class OfficeRepository {
             .select()
             .from("offices")
             .field('"isGroup"')
-            .where('"officeId"? =', officeId)
+            .where('"officeId"=?', officeId)
             .toParam();
         return (await pool.query(query.text, query.values)).rows;
     }
