@@ -12,6 +12,7 @@ class officeBookingsRepository {
       .set('"startTime"', booking_details.startTime)
       .set('"endTime"', booking_details.endTime)
       .set("config", booking_details.config)
+      .returning('"userId"')
       .toParam();
 
     const result = await pool.query(query.text, query.values);
