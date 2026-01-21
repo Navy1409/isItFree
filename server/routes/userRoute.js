@@ -6,8 +6,9 @@ const userController = new UserController();
 
 router.route('/createUser').post(userController.createUser);
 router.route('/updateUser/:userId').patch(userController.editUser);
+router.route('/getUserByEmail/:emailId').get(userController.getUserByEmail);
 router.route('/getUserById/:userId').get(userController.getUserById)
-router.route('/deleteUser/:userId').delete(userController.deleteUser);
+router.route('/deleteUser/:userId').delete(authorisation, userController.deleteUser);
 router.route('/getUserByOrganisationId/:organisationId').get(userController.getUserByOrganisationId)
 
 module.exports = router;

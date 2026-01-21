@@ -19,7 +19,8 @@ module.exports = async (req, res, next) => {
       emailId,
       password,
       openTime,
-      closeTime
+      closeTime,
+      breakTime
     } = req.body;
     if (!userName || !emailId || !password || !organisationName || !openTime || !closeTime) {
       throw new CustomAPIError("Please provide required credentials", 400);
@@ -30,7 +31,8 @@ module.exports = async (req, res, next) => {
     const organisation = await organisationService.createOrganisation(
       organisationName,
       openTime,
-      closeTime
+      closeTime,
+      breakTime
     );
     const user = await userService.createUser(
       userName,

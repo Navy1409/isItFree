@@ -16,7 +16,7 @@ class OfficeService {
         return response;
     }
 
-    async getOfficeByOrganisationId(organisationId) {
+    async getOfficesByOrganisationId(organisationId) {
         const response = await this.officeRepository.getOfficesByOrganisationId(organisationId);
         return response;
     }
