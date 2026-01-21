@@ -11,7 +11,7 @@ class officeBookingsRepository {
       .set('"bookingDate"', booking_details.bookingDate)
       .set('"startTime"', booking_details.startTime)
       .set('"endTime"', booking_details.endTime)
-      .set("config", booking_details.config)
+      .set("config", JSON.stringify(booking_details.config))
       .returning('"userId"')
       .toParam();
 
@@ -96,23 +96,27 @@ class officeBookingsRepository {
     const result = await pool.query(query.text, query.values);
     return result.rows;
   }
-  async getAllBookingsByUserUUID(userId,startDate, endDate){
-    const query= squel
-    .select()
-    .from("office_bookings")
-    .field('"officeId"')
-    .field('"bookingDate"')
-    .field('"startTime"')
-    .field('"endTime"')
-    .field("config")
-    .where('"userId"=?',userId);
+  async getAllBookingsByUserUUID(userId, startDate, endDate) {
+    const query = squel
+      .select()
+      .from("office_bookings")
+      .field("id")
+      .field('"officeId"')
+      .field('"bookingDate"')
+      .field('"startTime"')
+      .field('"endTime"')
+      .field("config")
+      .where('"userId"=?', userId);
 
-    if(startDate)query.where('"bookingDate">=?',startDate);
-    if(endDate)query.where('"bookingDate"<=?',endDate);
+    if (startDate) query.where('"bookingDate">=?', startDate);
+    if (endDate) query.where('"bookingDate"<=?', endDate);
 
-    query.toParam();
+    // query.toParam();
 
-    const result= await pool.query(query.text, query.values);
+    const { text, values } = query.toParam();
+    console.log(text, values);
+
+    const result = await pool.query(text, values);
     return result.rows;
   }
 }

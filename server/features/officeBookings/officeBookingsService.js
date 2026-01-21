@@ -167,7 +167,7 @@ class OfficeBookingsService {
         userId,
         bookingDate,
       )
-      : await this.officeBookingsRepository.getUserBookingTimes(
+      : await this.officeBookingsRepository.getUserSeatBookingTimes(
         userId,
         bookingDate,
       );
@@ -256,7 +256,7 @@ class OfficeBookingsService {
   }
 
   async getCurrentBooking(userId) {
-    const startDate = new Date().toISOString().slice(0.1);
+    const startDate = new Date().toISOString().slice(0,10);
     return await this.officeBookingsRepository.getAllBookingsByUserUUID(
       userId,
       startDate,

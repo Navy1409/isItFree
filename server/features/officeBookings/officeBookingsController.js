@@ -14,7 +14,7 @@ class OfficeBookingsController {
       res.status(400).json("Provide Office Id");
     }
 
-    const result = await this.officeBookingsService.getGroupRoomAvailability(
+    const result = await this.officeBookingsService.getOfficeVacancyByOfficeIdAndBookingDate(
       officeId,
       bookingDate,
     );
@@ -28,8 +28,13 @@ class OfficeBookingsController {
       res.status(401).json("Invalid Credentials");
     }
 
-    const result = await this.officeBookingsService.getBookingHistory(userId);
-    res.status(200).json(result);
+    let result = await this.officeBookingsService.getBookingHistory(userId);
+    const response = result.map(r => ({
+      ...r,
+      bookingDate: r.bookingDate.toLocaleDateString('en-CA') 
+    }));
+
+    res.status(200).json(response);
   };
 
   getUserCurrentBookings = async (req, res) => {
@@ -71,18 +76,15 @@ class OfficeBookingsController {
   getBookedSeatsByOfficeIdDateAndTime = async (req, res) => {
     const { officeId, date, half } = req.query;
     if (!officeId || !date || !half) {
-      res.status(400).json("Enter all values");
+      res.status(400).json("Enter all values")
     }
 
-    const result =
-      await this.officeBookingsService.getBookedSeatsByOfficeIdDateAndTime(
-        officeId,
-        date,
-        String(half).toLowerCase(),
-      );
+    const result = await this.officeBookingsService.getBookedSeatsByOfficeIdDateAndTime(officeId, date, String(half).toLowerCase())
 
-    res.status(200).json(result);
-  };
+    res.status(200).json(result)
+
+  }
 }
+
 
 module.exports = OfficeBookingsController;

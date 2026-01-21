@@ -37,7 +37,7 @@ class OfficeController {
             if (!organisation.length) {
                 res.status(400).json("Organisation does not exists")
             }
-            const result = await this.officeService.getOfficeByOrganisationId(organisationId);
+            const result = await this.officeService.getOfficesByOrganisationId(organisationId);
             res.status(200).json(result)
         } catch (error) {
             res.status(400).json(error)
