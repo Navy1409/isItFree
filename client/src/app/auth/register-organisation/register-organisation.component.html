@@ -19,7 +19,7 @@
 
       <!-- Card -->
       <div class="bg-white rounded-2xl p-8 lg:p-12 border border-charcoal/5 shadow-xl">
-        <form class="space-y-6" (ngSubmit)="onSubmit()">
+        <form class="space-y-6" [formGroup]="form" (ngSubmit)="onSubmit()">
 
           <!-- Organisation Name -->
           <div class="space-y-2">
@@ -27,7 +27,7 @@
               <i class="fa-solid fa-briefcase"></i>
               Organisation Name
             </label>
-            <input class="form-input" placeholder="e.g. Global Assets Ltd" type="text" />
+            <input class="form-input" placeholder="e.g. Global Assets Ltd" type="text" formControlName="organisationName" />
           </div>
 
           <!-- Admin Name -->
@@ -36,7 +36,7 @@
               <i class="fa-solid fa-user"></i>
               Admin Name
             </label>
-            <input class="form-input" placeholder="John Doe" type="text" />
+            <input class="form-input" placeholder="John Doe" type="text" formControlName="adminName"/>
           </div>
 
           <!-- Admin Email -->
@@ -45,7 +45,7 @@
               <i class="fa-solid fa-envelope"></i>
               Admin Email
             </label>
-            <input class="form-input" placeholder="admin@company.com" type="email" />
+            <input class="form-input" placeholder="admin@company.com" type="email" formControlName="adminEmail" />
           </div>
 
           <!-- Passwords -->
@@ -62,6 +62,7 @@
                   class="form-input pr-12"
                   [type]="showPassword ? 'text' : 'password'"
                   placeholder="••••••••"
+                  formControlName="password"
                 />
                 <button
                   type="button"
@@ -78,7 +79,7 @@
                 <i class="fa-solid fa-shield-halved"></i>
                 Confirm
               </label>
-              <input class="form-input" placeholder="••••••••" type="password" />
+              <input class="form-input" placeholder="••••••••" formControlName="confirmPassword" type="password" />
             </div>
           </div>
 

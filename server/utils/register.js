@@ -53,7 +53,14 @@ module.exports = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-    res.status(201).json({ token });
+    
+    res.status(201).json({
+      token,
+      userId: user.userId,
+      organisationId: user.organisationId,
+      isAdmin: user.isAdmin,
+      email: user.emailId
+    });
   } catch (err) {
     await pgClient.query("ROLLBACK");
     next(err);
