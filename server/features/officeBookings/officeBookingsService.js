@@ -222,6 +222,7 @@ class OfficeBookingsService {
 
   getAvailability(openTime, closeTime, existingBookings) {
     let currentTime = openTime;
+    const availableBooking=[];
     for (const booking of existingBookings) {
       if (currentTime < booking.startTime) {
         availableBooking.push({
@@ -239,6 +240,7 @@ class OfficeBookingsService {
         endTime: closeTime
       });
     }
+    return availableBooking;
   }
 
   async getBookingHistory(userId) {

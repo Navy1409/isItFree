@@ -16,7 +16,7 @@ const authenticate = (req, res, next) => {
     }
 }
 const authorisation = (req, res, next) => {
-    if (req.user.isAdmin) {
+    if (!req.user.isAdmin) {
         res.status(400).json("Not Authorised");
     }
     next();

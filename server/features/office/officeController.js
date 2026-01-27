@@ -21,8 +21,9 @@ class OfficeController {
 
   getOfficesByOrganisationId = async (req, res) => {
     try {
+      const params = req.params
       const result =
-        await this.officeService.getOfficesByOrganisationId(organisationId);
+        await this.officeService.getOfficesByOrganisationId(params);
       res.status(200).json(result);
     } catch (error) {
       res.status(400).json(error);

@@ -39,8 +39,8 @@ class OfficeService {
     return response;
   }
 
-  async getOfficesByOrganisationId(organisationId) {
-    const { organisationId } = req.params;
+  async getOfficesByOrganisationId(params) {
+    const organisationId = params;
     const response =
       await this.officeRepository.getOfficesByOrganisationId(organisationId);
     return response;
