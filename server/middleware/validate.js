@@ -1,7 +1,7 @@
-export const validate = (schema, property="body")=>{
-    return(req,res,next)=>{
-        const {error}= schema.validate(req[property]);
-        if(error){
+const validate = (schema, property = "body") => {
+    return (req, res, next) => {
+        const { error } = schema.validate(req[property]);
+        if (error) {
             return res.status(400).json({
                 msg: error.message
             });
@@ -9,3 +9,5 @@ export const validate = (schema, property="body")=>{
         next();
     }
 }
+
+module.exports = validate;

@@ -1,27 +1,33 @@
-const Joi=require('joi');
+const Joi = require('joi');
 
-export const uuid = Joi.string().uuid();
+class CommonValidation {
+  constructor(parameters) {
 
-export const userId = uuid;
-export const officeId = uuid;
-export const organisationId = uuid;
+  }
+  uuid = Joi.string().uuid();
+  positiveInt = Joi.number().min(1);
+  timeHHMM = Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/);
+  userId = this.uuid;
+  officeId = this.uuid;
+  organisationId = this.uuid;
+  emailId = Joi.string().email();
+  password = Joi.string().min(8).max(30);
+  userName = Joi.string().min(3).max(30);
+  name = Joi.string().min(2).max(50);
+  config = Joi.object({
+    row: this.positiveInt.required(),
+    column: this.positiveInt.required(),
+    capacity: this.positiveInt.optional()
+  }).unknown(false);
+  isAdmin = Joi.boolean();
+  organisationName = Joi.string().min(3).max(100);
+  officeName = Joi.string().min(3).max(100);
+  location = Joi.string().min(2).max(100);
+  isGroup = Joi.boolean();
+  bookingDate = Joi.date().iso();
+  time = this.timeHHMM;
+  userIds = Joi.array().items(this.uuid).min(1);
+  half = Joi.string().valid("first half", "second half", "full day");
+}
 
-export const emailId = Joi.string().email();
-export const password = Joi.string().min(8).max(30);
-export const userName = Joi.string().min(3).max(30);
-export const name = Joi.string().min(2).max(50);
-export const config = Joi.object({
-  row: positiveInt.required(),
-  column: positiveInt.required(),
-  capacity: positiveInt.optional()
-}).unknown(false);
-export const isAdmin = Joi.boolean();
-export const organisationName = Joi.string().min(3).max(100);
-export const officeName = Joi.string().min(3).max(100);
-export const location = Joi.string().min(2).max(100);
-export const isGroup = Joi.boolean();
-export const bookingDate = Joi.date().iso();
-
-export const time = timeHHMM;
-export const userIds = Joi.array().items(uuid).min(1);
-export const half = Joi.string().valid("first half", "second half", "full day");
+module.exports = CommonValidation;

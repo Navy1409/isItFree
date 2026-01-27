@@ -2,42 +2,38 @@ const express = require("express");
 const router = express.Router();
 const OfficeBookingsController = require("./officeBookingsController");
 const officeBookingsController = new OfficeBookingsController();
-const { validate } = require("../../middleware/validate");
-const {
-  createBookingsSchema,
-  officeVacancyQuerySchema,
-  userIdParamSchema,
-  bookedSeatsQuerySchema,
-} = require("../../validations/officeBookings.validaition");
+const validate = require("../../middleware/validate");
+const OfficeBookingsValidation = require("../../validations/officeBookings.validaition");
+const officeBookingsValidation = new OfficeBookingsValidation();
 
 router
   .route("/getGroupRoomAvailability")
   .get(
-    validate(officeVacancyQuerySchema, "query"),
+    validate(officeBookingsValidation.officeVacancyQuerySchema, "query"),
     officeBookingsController.getOfficeVacancyByOfficeIdAndBookingDate,
   );
 router
   .route("/getBookedSeatByOfficeIdDateAndTime")
   .get(
-    validate(bookedSeatsQuerySchema, "query"),
+    validate(officeBookingsValidation.bookedSeatsQuerySchema, "query"),
     officeBookingsController.getBookedSeatsByOfficeIdDateAndTime,
   );
 router
   .route("/createBookings")
   .post(
-    validate(createBookingsSchema),
+    validate(officeBookingsValidation.createBookingsSchema),
     officeBookingsController.createBookings,
   );
 router
   .route("/getHistory/:userId")
   .get(
-    validate(userIdParamSchema, "params"),
+    validate(officeBookingsValidation.userIdParamSchema, "params"),
     officeBookingsController.getUserBookingHistory,
   );
 router
   .route("/getCurrentBookings/:userId")
   .get(
-    validate(userIdParamSchema, "params"),
+    validate(officeBookingsValidation.userIdParamSchema, "params"),
     officeBookingsController.getUserCurrentBookings,
   );
 
