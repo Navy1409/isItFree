@@ -17,6 +17,22 @@ class organisationService {
         return response;
     }
 
+    async getOrganisationName(organisationId){
+        let response=await this.organisationRepository.getOrganisationName(organisationId);
+        if(!response){
+            throw new CustomAPIError('Invalid Credentials', 401);
+        }
+        return response;
+    }
+
+    async updateOrganisationName(organisationId,organisationName){
+        let response=await this.organisationRepository.updateOrganisationName(organisationId,organisationName);
+        if(!response){
+            throw new CustomAPIError('Invalid ID', 401);
+        }
+        return response;
+    }
+
     async getOrganisationByOrganisationId(organisationId) {
         if (!organisationId) {
             throw new CustomAPIError('Please provide orgasnisation id', 400);

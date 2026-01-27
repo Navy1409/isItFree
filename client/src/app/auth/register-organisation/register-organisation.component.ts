@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthApiServiceService } from '../../services/auth-api-service.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthServiceService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-register-organisation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,ReactiveFormsModule],
   templateUrl: './register-organisation.component.html',
   styleUrl: './register-organisation.component.css',
 })
@@ -34,7 +34,6 @@ export class RegisterOrganisationComponent {
 
   onSubmit() {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
       return;
     }
     const { confirmPassword, ...payload } = this.form.value;

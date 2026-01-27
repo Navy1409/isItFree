@@ -1,36 +1,49 @@
 const UserService = require('./userService')
-const OrganisationService=require('../organisations/organisationService')
 const bcrypt = require('bcrypt');
-const CustomAPIError = require('../../errors/customError');
 class UserController {
     constructor() {
         this.userService = new UserService()
     }
     createUser = async (req, res) => {
-        const { userName, firstName, lastName, emailId, organisationId } = req.body;
-        const user = await this.userService.createUser(userName, firstName, lastName, emailId, organisationId)
+        try {
+                    const payload = req.body;
+        const user = await this.userService.createUser(payload)
         res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+
     }
     getUserByEmail = async (req, res) => {
         const { emailId } = req.params
+        try {
         const user = await this.userService.getUserByEmail(emailId);
-        if (!user.length) {
-            return false;
-        }
         res.status(200).json(user)
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+        
     }
     getUserById = async (req, res) => {
         const { userId } = req.params
-        const user = await this.userService.getUserById(userId);
-        if (!user) {
-            return false;
-        }
+
+        try {
+            const user = await this.userService.getUserById(userId);
         res.status(200).json(user)
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+        
     }
     deleteUser = async (req, res) => {
         const { userId } = req.params;
-        const user = await this.userService.deleteUser(userId);
+        try {
+            const user = await this.userService.deleteUser(userId);
         res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+        
     }
     editUser = async (req, res) => {
         const ALLOWED_FIELDS = new Set([
@@ -62,13 +75,13 @@ class UserController {
     }
     async getUserByOrganisationId(req, res){
         const {organisationId}=req.params;
-
-        const organisation= await this.organisationService.getOrganisationName(organisationId);
-        if(!organisation){
-            throw new CustomAPIError('Invalid Credentials', 401)
-        }
+        try {
         const response=await this.userService.getUserByOrganisationId(organisationId);
         res.status(200).json(response);
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+
     }
 }
 
