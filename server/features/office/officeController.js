@@ -8,8 +8,8 @@ class OfficeController {
   }
 
   createOffice = async (req, res) => {
+    const payload = req.body;
     try {
-      const payload = req.body;
       const result = await this.officeService.createOffice(payload);
       res.status(200).json(result);
     } catch (error) {
@@ -20,6 +20,7 @@ class OfficeController {
   };
 
   getOfficesByOrganisationId = async (req, res) => {
+    const {organisationId}=req.params;
     try {
       const params = req.params
       const result =
