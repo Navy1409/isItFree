@@ -20,7 +20,6 @@ class OfficeController {
   };
 
   getOfficesByOrganisationId = async (req, res) => {
-    const {organisationId}=req.params;
     try {
       const params = req.params
       const result =
