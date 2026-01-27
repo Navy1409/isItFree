@@ -1,10 +1,19 @@
 const CustomAPIError = require("../../errors/customError");
 const UserRepository = require("./userRepository");
-
+const bcrypt = require("bcrypt");
 
 class UserService {
   constructor() {
     this.userRepository = new UserRepository();
+  }
+  async loginUser({emailId, password}) {
+    const user = await this.getUserByEmail(emailId);
+    const ok = await bcrypt.compare(password, user[0].password);
+    if (!ok) {
+      throw new CustomAPIError("Password does not match",401);
+    }
+    const token= jwt.sign({id:user.userId, isAdmin:user.isAdmin, organsation: user.organisationId}, process.env.JWT_SECRET, {expiresIn:"30d"});
+    return token;
   }
   async getUserByEmail(email) {
     const user = await this.userRepository.getUserByEmail(email);

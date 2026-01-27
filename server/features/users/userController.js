@@ -83,6 +83,15 @@ class UserController {
         }
 
     }
+    login= async (req , res)=>{
+        const payload=req.body;
+        try {
+            const token= await this.userService(payload);
+            res.status(StatusCodes.OK).json(token);            
+        } catch (error) {
+            res.status(500).json({msg:error.message});
+        }
+    }
 }
 
 module.exports = UserController
