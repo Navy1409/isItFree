@@ -71,7 +71,7 @@ class UserController {
         const payload = req.body;
         try {
             const token = await this.userService.loginUser(payload);
-            res.status(StatusCodes.OK).json(token);
+            res.status(StatusCodes.OK).json({ token });
         } catch (error) {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: error.message });
         }
@@ -114,18 +114,16 @@ class UserController {
 
             await pgClient.query("COMMIT");
             const token = jwt.sign(
-                { id: user.userId, organisation_id: organisationId, isAdmin: user.isAdmin },
+                {
+                    userId: user.userId, organisationId: organisationId, isAdmin: user.isAdmin,
+                    email: user.emailId
+                },
                 process.env.JWT_SECRET,
                 { expiresIn: "1d" }
             );
 
             res.status(201).json({
-                token,
-                userId: user.userId,
-                organisationId: user.organisationId,
-                isAdmin: user.isAdmin,
-                email: user.emailId,
-                organisationId: user.organisationId
+                token
             });
         } catch (err) {
             await pgClient.query("ROLLBACK");

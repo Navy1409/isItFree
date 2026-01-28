@@ -7,12 +7,20 @@ export class AuthServiceService {
   private readonly STORAGE_KEY = 'user';
 
   constructor() { }
+   decodeToken(token: string) {
+    const payload = token.split('.')[1];
+    console.log(payload);
+    
+    const decoded = atob(payload);
+    const data= JSON.parse(decoded);
+    this.setUser(data)
+  }
   setUser(data: {
     token: string;
     userId: string;
     organisationId: string;
     isAdmin: boolean;
-    email: string;
+    emailId: string;
   }) {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
   }

@@ -9,12 +9,16 @@ class UserService {
     this.userRepository = new UserRepository();
   }
   async loginUser({ emailId, password }) {
-    const user = await this.getUserByEmail(emailId);
-    const ok = await bcrypt.compare(password, user[0].password);
+    const users = await this.getUserByEmail(emailId);
+    const user = users[0];
+    if (!user) {
+      throw new CustomAPIError("No such user found", 400);
+    }
+    const ok = await bcrypt.compare(password, user.password);
     if (!ok) {
       throw new CustomAPIError("Password does not match", 401);
     }
-    const token = jwt.sign({ id: user.userId, isAdmin: user.isAdmin, organsation: user.organisationId }, process.env.JWT_SECRET, { expiresIn: "30d" });
+    const token = jwt.sign({ userId: user.userId, isAdmin: user.isAdmin, organisationId: user.organisationId, emailId: user.emailId }, process.env.JWT_SECRET, { expiresIn: "30d" });
     return token;
   }
   async getUserByEmail(email) {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthenticateService } from '../../../services/authenticate.service';
+import { AuthenticateService } from '../../services/authenticate.service';
+import { AuthServiceService } from '../../services/auth-service.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -10,41 +11,44 @@ import { AuthenticateService } from '../../../services/authenticate.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
- email = '';
+  email = '';
   password = '';
-  error='';
+  error = '';
   showPassword = false;
-  constructor(private router:Router,private authService:AuthenticateService){}
-  token:string|null= '';
+  constructor(private router: Router, private authService: AuthenticateService,
+    private authHelper:AuthServiceService
+  ) { }
+  token: string | null = '';
 
   ngOnInit(): void {
-     this.token= localStorage.getItem('token');
-     if(this.token){
-    this.router.navigate(['/']);
+    this.token = localStorage.getItem('token');
+    if (this.token) {
+      this.router.navigate(['/']);
+    }
   }
-  }
-  
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
+ 
   login() {
-    const payload={
-      emailId:this.email,
+    const payload = {
+      emailId: this.email,
       password: this.password
     }
     this.authService.loginUser(payload).subscribe({
-      next: (res:any)=>{
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('userId', res.userId);
-        localStorage.setItem('organisationId', res.organisationId);
-        localStorage.setItem('emailId',res.emailId);
-        this.router.navigate(['/']);
-
-      },
-      error:err=>{
-        this.error=err?.error?.message;
-        console.log(this.error);
+      next: (res: any) => {
+        console.log(res.token);
         
+        this.authHelper.decodeToken(res.token);
+        // localStorage.setItem('token', res.token);
+        // localStorage.setItem('userId', decoded.userId);
+        // localStorage.setItem('organisationId', decoded.organisationId);
+        // localStorage.setItem('emailId', decoded.emailId);
+      },
+      error: err => {
+        this.error = err?.error?.msg;
+        console.log(this.error);
       }
     })
   }

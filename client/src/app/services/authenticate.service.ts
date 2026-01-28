@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticateService {
-private readonly baseUrl='http://localhost:3000/auth'
+private readonly baseUrl='http://localhost:3000/user'
   constructor(private http:HttpClient) { }
 
   loginUser(payload:{emailId:string,password:string}):Observable<object>{

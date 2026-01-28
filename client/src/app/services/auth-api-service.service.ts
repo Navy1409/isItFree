@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthApiServiceService {
 
-  private readonly BASE_URL = 'http://localhost:3000/auth'
+  private readonly BASE_URL = 'http://localhost:3000/user'
   constructor(private http:HttpClient) { }
   register(payload: any) {
     return this.http.post<any>(`${this.BASE_URL}/register`, payload);

@@ -55,6 +55,7 @@ class userRepository {
       .set("password", password)
       .returning('"userId"')
       .returning('"isAdmin"')
+      .returning('"emailId"')
       .toParam();
     const result = await pgClient.query(query.text, query.values);
     return result.rows[0];
