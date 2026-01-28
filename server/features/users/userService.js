@@ -9,12 +9,13 @@ class UserService {
     this.userRepository = new UserRepository();
   }
   async loginUser({ emailId, password }) {
-    const user = await this.getUserByEmail(emailId);
-    const ok = await bcrypt.compare(password, user[0].password);
+    const users = await this.getUserByEmail(emailId);
+    const user=users[0];
+    const ok = await bcrypt.compare(password, user.password);
     if (!ok) {
       throw new CustomAPIError("Password does not match", 401);
     }
-    const token = jwt.sign({ id: user.userId, isAdmin: user.isAdmin, organsation: user.organisationId }, process.env.JWT_SECRET, { expiresIn: "30d" });
+    const token = jwt.sign({ id: user.userId, isAdmin: user.isAdmin, organisationId: user.organisationId }, process.env.JWT_SECRET, { expiresIn: "30d" });
     return token;
   }
   async getUserByEmail(email) {
@@ -42,10 +43,14 @@ class UserService {
     pgClient
   }) {
     const user = await this.userRepository.getUserByEmail(emailId);
+    let hashed_password;
     if (user.length) {
       throw new CustomAPIError("User already exists", StatusCodes.CONFLICT);
     }
-    const hashed_password = await bcrypt.hash(password, 10)
+    if(password){
+      hashed_password = await bcrypt.hash(password, 10)
+    }
+
     const createdUser = await this.userRepository.createUser(
       userName,
       firstName,

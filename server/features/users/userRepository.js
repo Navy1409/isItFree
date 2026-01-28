@@ -41,7 +41,7 @@ class userRepository {
     organisationId,
     isAdmin = false,
     password = null,
-    pgClient
+    pgClient=pool
   ) => {
     const query = squel
       .insert()
@@ -56,6 +56,14 @@ class userRepository {
       .returning('"userId"')
       .returning('"isAdmin"')
       .toParam();
+      console.log(query.text, query.values
+
+
+
+
+
+      );
+      
     const result = await pgClient.query(query.text, query.values);
     return result.rows[0];
   };
