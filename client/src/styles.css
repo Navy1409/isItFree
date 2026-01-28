@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom reusable styles */
+.form-input {
+  @apply w-full rounded-xl bg-[#F9F9F9] border border-charcoal/10 text-charcoal
+         text-base py-4 px-5 placeholder:text-charcoal/30
+         focus:outline-none focus:ring-1 focus:ring-primary;
+}
+
+.form-label {
+  @apply text-xs font-bold uppercase tracking-widest text-charcoal/60
+         flex items-center gap-2;
+}

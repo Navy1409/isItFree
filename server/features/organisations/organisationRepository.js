@@ -1,7 +1,7 @@
 const { pool } = require("../../db/connect");
 const squel = require('squel').useFlavour("postgres");
 class organisationRepository {
-  async createOrganisation(organisationName, open_time, close_time, breakTime) {
+  async createOrganisation(organisationName, open_time, close_time, breakTime, pgClient) {
     const query = squel
       .insert()
       .into("organisations")
@@ -12,7 +12,7 @@ class organisationRepository {
       .returning('"organisationId"')
       .toParam();
 
-    const result = await pool.query(query.text, query.values);
+    const result = await pgClient.query(query.text, query.values);
     return result.rows[0].organisationId;
   }
   async getOrganisationName(organisationId) {

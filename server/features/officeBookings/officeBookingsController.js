@@ -9,82 +9,70 @@ class OfficeBookingsController {
   }
 
   getOfficeVacancyByOfficeIdAndBookingDate = async (req, res) => {
-    const { officeId, bookingDate } = req.query;
-    if (!officeId) {
-      res.status(400).json("Provide Office Id");
+    const payload = req.query;
+    try {
+      const result =
+        await this.officeBookingsService.getOfficeVacancyByOfficeIdAndBookingDate(payload);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ msg: err.message });
     }
-
-    const result = await this.officeBookingsService.getOfficeVacancyByOfficeIdAndBookingDate(
-      officeId,
-      bookingDate,
-    );
-    res.status(200).json(result);
   };
 
   getUserBookingHistory = async (req, res) => {
     const { userId } = req.params;
     const user = await this.userService.getUserById(userId);
-    if (!user) {
-      res.status(401).json("Invalid Credentials");
+
+    try {
+      let result = await this.officeBookingsService.getBookingHistory(userId);
+      const response = result.map((r) => ({
+        ...r,
+        bookingDate: r.bookingDate.toLocaleDateString("en-CA"),
+      }));
+
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json({ msg: err.message });
     }
-
-    let result = await this.officeBookingsService.getBookingHistory(userId);
-    const response = result.map(r => ({
-      ...r,
-      bookingDate: r.bookingDate.toLocaleDateString('en-CA') 
-    }));
-
-    res.status(200).json(response);
   };
 
   getUserCurrentBookings = async (req, res) => {
     const { userId } = req.params;
-    const user = await this.userService.getUserById(userId);
-    if (!user) {
-      res.status(401).json("Invalid Credentials");
+    try {
+      
+      const result = await this.officeBookingsService.getCurrentBooking(userId);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ msg: err.message });
     }
-
-    const result = await this.officeBookingsService.getCurrentBooking(userId);
-    res.status(200).json(result);
   };
 
   createBookings = async (req, res) => {
-    const { userIds, officeId, bookingDate, startTime, endTime, config } =
-      req.body;
-    if (
-      !userIds ||
-      !officeId ||
-      !bookingDate ||
-      !startTime ||
-      !endTime ||
-      !config
-    ) {
-      res.status(400).json("requied fields are missing");
-    }
+    const payload = req.body;
 
-    const result = await this.officeBookingsService.createBookings(
-      userIds,
-      officeId,
-      bookingDate,
-      startTime,
-      endTime,
-      config,
-    );
-    res.status(200).json(result);
+    try {
+      const result = await this.officeBookingsService.createBookings(payload);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ msg: err.message });
+    }
   };
 
   getBookedSeatsByOfficeIdDateAndTime = async (req, res) => {
     const { officeId, date, half } = req.query;
-    if (!officeId || !date || !half) {
-      res.status(400).json("Enter all values")
+
+    try {
+      const result =
+        await this.officeBookingsService.getBookedSeatsByOfficeIdDateAndTime(
+          officeId,
+          date,
+          String(half).toLowerCase(),
+        );
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ msg: err.message });
     }
-
-    const result = await this.officeBookingsService.getBookedSeatsByOfficeIdDateAndTime(officeId, date, String(half).toLowerCase())
-
-    res.status(200).json(result)
-
-  }
+  };
 }
-
 
 module.exports = OfficeBookingsController;

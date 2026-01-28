@@ -1,74 +1,138 @@
 const UserService = require('./userService')
-const OrganisationService=require('../organisations/organisationService')
-const bcrypt = require('bcrypt');
-const CustomAPIError = require('../../errors/customError');
+const OrganisationService = require('../organisations/organisationService')
+const { StatusCodes } = require('http-status-codes');
+const UserRepository = require('./userRepository');
+const { pool } = require('../../db/connect')
+const jwt = require('jsonwebtoken')
 class UserController {
     constructor() {
         this.userService = new UserService()
+        this.organisationService = new OrganisationService();
+        this.userRepository = new UserRepository();
     }
     createUser = async (req, res) => {
-        const { userName, firstName, lastName, emailId, organisationId } = req.body;
-        const user = await this.userService.createUser(userName, firstName, lastName, emailId, organisationId)
-        res.status(200).json(user);
+        try {
+            const payload = req.body;
+            const user = await this.userService.createUser(payload)
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+
     }
     getUserByEmail = async (req, res) => {
         const { emailId } = req.params
-        const user = await this.userService.getUserByEmail(emailId);
-        if (!user.length) {
-            return false;
+        try {
+            const user = await this.userService.getUserByEmail(emailId);
+            res.status(200).json(user)
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
         }
-        res.status(200).json(user)
+
     }
     getUserById = async (req, res) => {
         const { userId } = req.params
-        const user = await this.userService.getUserById(userId);
-        if (!user) {
-            return false;
+
+        try {
+            const user = await this.userService.getUserById(userId);
+            res.status(200).json(user)
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
         }
-        res.status(200).json(user)
+
     }
     deleteUser = async (req, res) => {
         const { userId } = req.params;
-        const user = await this.userService.deleteUser(userId);
-        res.status(200).json(user);
+        try {
+            const user = await this.userService.deleteUser(userId);
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
+        }
+
     }
     editUser = async (req, res) => {
-        const ALLOWED_FIELDS = new Set([
-            'userName',
-            'firstName',
-            'lastName',
-            'emailId',
-            'password',
-            'isAdmin'
-        ]);
-        const { userId } = req.params;
-        const { ...payload } = req.body;
-        const updates = {};
-        for (const [key, value] of Object.entries(payload)) {
-            if (!ALLOWED_FIELDS.has(key)) continue;
-            if (value === undefined) continue;
-            if (key == 'password') {
-                updates.password = await bcrypt.hash(value, 10)
-            } else {
-                updates[key] = value;
-            }
-        }
-        if (Object.keys(updates).length === 0) {
-            throw new Error('No valid fields to update');
-        }
-
-        const response = await this.userService.updateUser(userId, updates);
+        const params = req.params;
+        const body = req.body
+        const response = await this.userService.updateUser(params, body);
         res.status(200).json(response)
     }
-    async getUserByOrganisationId(req, res){
-        const {organisationId}=req.params;
-
-        const organisation= await this.organisationService.getOrganisationName(organisationId);
-        if(!organisation){
-            throw new CustomAPIError('Invalid Credentials', 401)
+    getUserByOrganisationId = async (req, res) => {
+        const { organisationId } = req.params;
+        try {
+            const response = await this.userService.getUserByOrganisationId(organisationId);
+            res.status(200).json(response);
+        } catch (error) {
+            res.status(500).json({ msg: error.message });
         }
-        const response=await this.userService.getUserByOrganisationId(organisationId);
-        res.status(200).json(response);
+
+    }
+    login = async (req, res) => {
+        const payload = req.body;
+        try {
+            const token = await this.userService.loginUser(payload);
+            res.status(StatusCodes.OK).json(token);
+        } catch (error) {
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: error.message });
+        }
+    }
+
+    register = async (req, res, next) => {
+        const pgClient = await pool.connect();
+        try {
+            const {
+                firstName,
+                lastName,
+                userName,
+                organisationName,
+                emailId,
+                password,
+                openTime,
+                closeTime,
+                breakTime
+            } = req.body;
+            await pgClient.query("BEGIN");
+            const organisationId = await this.organisationService.createOrganisation(
+                organisationName,
+                openTime,
+                closeTime,
+                breakTime,
+                pgClient
+            );
+            const user = await this.userService.createUser(
+                {
+                    userName,
+                    firstName,
+                    lastName,
+                    emailId,
+                    organisationId,
+                    isAdmin: true,
+                    password,
+                    pgClient
+                }
+            );
+
+            await pgClient.query("COMMIT");
+            const token = jwt.sign(
+                { id: user.userId, organisation_id: organisationId, isAdmin: user.isAdmin },
+                process.env.JWT_SECRET,
+                { expiresIn: "1d" }
+            );
+
+            res.status(201).json({
+                token,
+                userId: user.userId,
+                organisationId: user.organisationId,
+                isAdmin: user.isAdmin,
+                email: user.emailId,
+                organisationId: user.organisationId
+            });
+        } catch (err) {
+            await pgClient.query("ROLLBACK");
+            next(err);
+        } finally {
+            pgClient.release();
+        }
     }
 }
 

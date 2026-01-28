@@ -10,14 +10,14 @@ class OfficeBookingsService {
     this.organisationRepository = new OrganisationRepository();
   }
 
-  async createBookings(
+  async createBookings({
     userIds,
     officeId,
     bookingDate,
     startTime,
     endTime,
     config,
-  ) {
+  }) {
     const today = new Date().toISOString().slice(0, 10);
 
     if (bookingDate < today || startTime > endTime) {
@@ -119,7 +119,7 @@ class OfficeBookingsService {
     return results;
   }
 
-  async getOfficeVacancyByOfficeIdAndBookingDate(officeId, bookingDate) {
+  async getOfficeVacancyByOfficeIdAndBookingDate({officeId, bookingDate}) {
     const office = await this.officeService.getOfficeByOfficeId(officeId)
     if (!office.length) {
       throw new CustomAPIError("No such office Exists", 400);
@@ -222,6 +222,7 @@ class OfficeBookingsService {
 
   getAvailability(openTime, closeTime, existingBookings) {
     let currentTime = openTime;
+    const availableBooking=[];
     for (const booking of existingBookings) {
       if (currentTime < booking.startTime) {
         availableBooking.push({
@@ -239,6 +240,7 @@ class OfficeBookingsService {
         endTime: closeTime
       });
     }
+    return availableBooking;
   }
 
   async getBookingHistory(userId) {
@@ -256,6 +258,10 @@ class OfficeBookingsService {
   }
 
   async getCurrentBooking(userId) {
+    const user = await this.userService.getUserById(userId);
+    if(!user){
+      throw new CustomAPIError("The user doesn't exist",404);
+    }
     const startDate = new Date().toISOString().slice(0,10);
     return await this.officeBookingsRepository.getAllBookingsByUserUUID(
       userId,

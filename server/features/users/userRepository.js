@@ -7,6 +7,10 @@ class userRepository {
       .select()
       .from("users")
       .field("password")
+      .field('"userId"')
+      .field('"organisationId"')
+      .field('"isAdmin"')
+      .field('"emailId"')
       .where('"emailId" = ?', email)
       .toParam();
 
@@ -34,9 +38,10 @@ class userRepository {
     firstName,
     lastName,
     emailId,
-    organisationId ,
+    organisationId,
     isAdmin = false,
     password = null,
+    pgClient
   ) => {
     const query = squel
       .insert()
@@ -51,8 +56,7 @@ class userRepository {
       .returning('"userId"')
       .returning('"isAdmin"')
       .toParam();
-
-    const result = await pool.query(query.text, query.values);
+    const result = await pgClient.query(query.text, query.values);
     return result.rows[0];
   };
 
@@ -80,18 +84,18 @@ class userRepository {
     const result = await pool.query(query.text, query.values);
     return result;
   }
-  getUserByOrganisationId=async (organisationId)=>{
-    const query= squel
-    .select()
-    .from("users")
-    .field('"userName"')
-    .field('"firstName"')
-    .field('"lastName"')
-    .field('"emailId"')
-    .where('"organisationId"=?',organisationId)
-    .toParam();
-        
-    const result= await pool.query(query.text, query.values);
+  getUserByOrganisationId = async (organisationId) => {
+    const query = squel
+      .select()
+      .from("users")
+      .field('"userName"')
+      .field('"firstName"')
+      .field('"lastName"')
+      .field('"emailId"')
+      .where('"organisationId"=?', organisationId)
+      .toParam();
+
+    const result = await pool.query(query.text, query.values);
     return result.rows;
 
   }
