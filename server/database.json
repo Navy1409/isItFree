@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "pg",
+    "host": "localhost",
+    "database": "IsItFree",
+    "user": "postgres",
+    "password": "argusadmin",
+    "port": 5432
+  }
+}
