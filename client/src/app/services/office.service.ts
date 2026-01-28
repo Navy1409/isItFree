@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,12 @@ export class OfficeService {
   constructor( private http:HttpClient) { }
 
   getAllOffices(organisationId):Observable<any[]>{
-    return this.http.get<any[]>(`${this.baseUrl}/getOfficesByOrganisationId/${organisationId}`)
+    const token=localStorage.getItem('token')
+    const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+    return this.http.get<any[]>(`${this.baseUrl}/getOfficesByOrganisationId/${organisationId}`,{headers:headers}
+    )
   }
 
   getOfficeByOfficeId(officeId):Observable<any>{

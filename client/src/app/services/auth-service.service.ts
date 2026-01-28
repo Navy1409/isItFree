@@ -13,15 +13,16 @@ export class AuthServiceService {
     
     const decoded = atob(payload);
     const data= JSON.parse(decoded);
-    this.setUser(data)
+    this.setUser(token,data)
   }
-  setUser(data: {
+  setUser(token,data: {
     token: string;
     userId: string;
     organisationId: string;
     isAdmin: boolean;
     emailId: string;
   }) {
+    localStorage.setItem("token", token)
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
   }
    getUser() {

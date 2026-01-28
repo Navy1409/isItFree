@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { OfficeService } from '../../services/office.service';
+import { OfficeService } from '../services/office.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,15 +26,23 @@ export class AllOfficeComponent implements OnInit {
   visibleDates: Date[] = [];
   selectedDate!: Date;
   minDate = new Date();
+  token:string|null='';
 
   constructor(private router: Router, private officeService: OfficeService) { }
 
   ngOnInit() {
-    this.organisationId = localStorage.getItem('organisationId');
+    this.token=localStorage.getItem('user');
+    if(!this.token){
+    this.router.navigate(['/login'])
+    }
+    const userStr =localStorage.getItem('user');
+   if(userStr){
+     const user=JSON.parse(userStr)
+    this.organisationId = user.organisationId;
+   }
     this.selectedDate = new Date();
     this.allDates = this.getNextWorkingDays(this.selectedDate, 10);
     this.updateVisibleDates();
-
     this.officeService.getAllOffices(this.organisationId).subscribe({
       next: (res: any) => {
         this.offices = res;
@@ -43,8 +51,8 @@ export class AllOfficeComponent implements OnInit {
       }
       ,
       error: err => {
-        this.error = err?.error?.message;
-        console.log(this.error);
+        this.error = err?.error?.msg;
+        console.log(err);
 
       }
     })
