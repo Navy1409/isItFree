@@ -22,5 +22,9 @@
     "pg": "^8.16.3",
     "socket.io": "^4.8.3",
     "squel": "^5.13.0"
+  },
+  "devDependencies": {
+    "db-migrate": "^0.11.14",
+    "db-migrate-pg": "^1.5.2"
   }
 }
