@@ -1,0 +1,124 @@
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+  <!-- LEFT INFO -->
+  <div class="lg:col-span-4 space-y-4">
+    <h2 class="text-3xl font-extrabold text-charcoal">
+      Office Registration
+    </h2>
+
+    <p class="text-gray-500">
+      Create a physical office and define its basic layout.
+    </p>
+
+  </div>
+
+  <!-- FORM -->
+  <div class="lg:col-span-8">
+    <div class="bg-white border rounded-xl p-8">
+
+      <form [formGroup]="createOfficeForm" (ngSubmit)="onSubmit()" class="space-y-8">
+
+        <!-- BASIC DETAILS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Office Name -->
+          <div>
+            <label class="text-xs font-bold uppercase">Office Name</label>
+            <input
+              type="text"
+              placeholder="London HQ"
+              formControlName="officeName"
+              class="mt-2 w-full px-4 py-3 bg-gray-50 rounded-lg
+                     focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="text-xs font-bold uppercase">Location</label>
+            <input
+              type="text"
+              placeholder="FirstFloor"
+              formControlName="location"
+              class="mt-2 w-full px-4 py-3 bg-gray-50 rounded-lg
+                     focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Capacity -->
+          <div>
+            <label class="text-xs font-bold uppercase">Total Capacity</label>
+            <input
+              type="number"
+              placeholder="Total desks"
+              formControlName="capacity"
+              class="mt-2 w-full px-4 py-3 bg-gray-50 rounded-lg
+                     focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Group Office -->
+          <div>
+            <label class="text-xs font-bold uppercase">Group Office</label>
+            <div class="mt-2 flex items-center justify-between px-4 py-3 bg-off-white rounded-lg">
+              <span class="text-sm">Is group office</span>
+
+              <input type="checkbox" formControlName="isGroup" class="accent-primary bg-gray-50 h-4 w-4" />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- OFFICE LAYOUT -->
+        <div>
+          <h3 class="text-sm font-extrabold uppercase tracking-wide text-gray-600 mb-4">
+            Office Layout
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Rows -->
+            <div>
+              <label class="text-xs font-bold uppercase">Number of Rows</label>
+              <input
+                type="number"
+                min="1"
+                placeholder="e.g. 5"
+                formControlName="row"
+                class="mt-2 w-full px-4 py-3 bg-gray-50 rounded-lg
+                       focus:ring-2 focus:ring-primary outline-none"
+              />
+            </div>
+
+            <!-- Columns -->
+            <div>
+              <label class="text-xs font-bold uppercase">Number of Columns</label>
+              <input
+                type="number"
+                min="1"
+                placeholder="e.g. 10"
+                formControlName="column"
+                class="mt-2 w-full px-4 py-3 bg-gray-50 rounded-lg
+                       focus:ring-2 focus:ring-primary outline-none"
+              />
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="pt-4 border-t flex justify-between items-center">
+
+          <button
+            type="submit"
+            class="bg-primary text-white px-8 py-3 rounded-lg
+                   font-bold hover:bg-[#b08856] transition">
+            Create Office
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

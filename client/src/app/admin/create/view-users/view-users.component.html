@@ -1,0 +1,95 @@
+<div class="bg-white border border-border-light rounded-2xl shadow-sm">
+  <!-- HEADER -->
+  <div
+    class="px-8 py-6 border-b border-border-light flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
+  >
+    <div>
+      <h2 class="text-2xl font-extrabold text-charcoal">Users</h2>
+      <p class="text-sm text-gray-500 mt-1">
+        Manage all users within this organization.
+      </p>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex items-center gap-4">
+      <input
+        type="text"
+        placeholder="Search users..."
+        class="w-64 px-4 py-3 bg-off-white rounded-lg focus:ring-2 focus:ring-primary outline-none placeholder:text-gray-400 text-sm"
+      />
+
+      <button
+      routerLink="../create-user"
+        class="bg-primary hover:bg-[#b08856] text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 transition-all"
+      >
+        <i class="fa-solid fa-user-plus"></i>
+        Add User
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLE WRAPPER (SCROLLABLE FOR LARGE DATASETS) -->
+  <div class="max-h-[65vh] overflow-y-auto">
+    <!-- TABLE HEADER (STICKY) -->
+    <div
+      class="grid grid-cols-12 px-8 py-4 text-xs font-black uppercase tracking-[0.15em] text-gray-400 border-b border-border-light bg-white sticky top-0 z-10"
+    >
+      <div class="col-span-4">Username</div>
+      <div class="col-span-3">First Name</div>
+      <div class="col-span-3">Last Name</div>
+      <div class="col-span-2 text-right">Actions</div>
+    </div>
+
+    <!-- LOADING -->
+    @if (isLoading) {
+      <div class="px-8 py-12 text-center text-gray-400">Loading users...</div>
+    }
+
+    <!-- EMPTY STATE -->
+    @if (!isLoading && users.length === 0) {
+      <div class="px-8 py-12 text-center text-gray-400">No users found.</div>
+    }
+
+    <!-- USER ROWS -->
+    @for (user of users; track user.username) {
+      <div
+        class="grid grid-cols-12 px-8 py-5 items-center hover:bg-off-white transition-colors"
+      >
+        <!-- Username -->
+        <div class="col-span-4 flex items-center gap-3">
+          <i class="fa-solid fa-user text-primary"></i>
+          <span class="font-semibold text-charcoal">
+            {{ user.username }}
+          </span>
+        </div>
+
+        <!-- First Name -->
+        <div class="col-span-3 text-gray-600">
+          {{ user.firstName }}
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-span-3 text-gray-600">
+          {{ user.lastName }}
+        </div>
+
+        <!-- Actions -->
+        <div class="col-span-2 flex justify-end gap-4">
+          <button
+            class="text-gray-400 hover:text-primary transition-colors"
+            title="View"
+          >
+            <i class="fa-solid fa-eye"></i>
+          </button>
+
+          <button
+            class="text-gray-400 hover:text-primary transition-colors"
+            title="Edit"
+          >
+            <i class="fa-solid fa-pen"></i>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

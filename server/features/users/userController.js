@@ -58,7 +58,7 @@ class UserController {
         res.status(200).json(response)
     }
     getUserByOrganisationId = async (req, res) => {
-        const { organisationId } = req.params;
+        const organisationId = req.user.organisationId;
         try {
             const response = await this.userService.getUserByOrganisationId(organisationId);
             res.status(200).json(response);
@@ -68,9 +68,9 @@ class UserController {
 
     }
     login = async (req, res) => {
-        const payload = req.body;
+        const { emailId, password } = req.body;
         try {
-            const token = await this.userService.loginUser(payload);
+            const token = await this.userService.loginUser({ emailId, password });
             res.status(StatusCodes.OK).json({ token });
         } catch (error) {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: error.message });

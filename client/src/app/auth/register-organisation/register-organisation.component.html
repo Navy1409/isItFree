@@ -1,10 +1,11 @@
 <!-- Main -->
 <main class="flex-1 flex items-center justify-center p-6 lg:p-16">
   <div class="w-full max-w-[540px]">
-
     <!-- Header -->
     <div class="text-center mb-10">
-      <div class="inline-flex items-center justify-center size-14 rounded-full bg-primary/10 mb-6">
+      <div
+        class="inline-flex items-center justify-center size-14 rounded-full bg-primary/10 mb-6"
+      >
         <i class="fa-solid fa-building text-primary text-2xl"></i>
       </div>
       <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight mb-4">
@@ -16,7 +17,9 @@
     </div>
 
     <!-- Card -->
-    <div class="bg-white rounded-2xl p-8 lg:p-12 border border-charcoal/5 shadow-xl">
+    <div
+      class="bg-white rounded-2xl p-8 lg:p-12 border border-charcoal/5 shadow-xl"
+    >
       <form class="space-y-6" [formGroup]="form" (ngSubmit)="onSubmit()">
         <!-- Organisation Name -->
         <div class="space-y-2">
@@ -24,8 +27,12 @@
             <i class="fa-solid fa-briefcase"></i>
             Organisation Name
           </label>
-          <input class="form-input" placeholder="e.g. Global Assets Ltd" type="text"
-            formControlName="organisationName" />
+          <input
+            class="form-input"
+            placeholder="e.g. Global Assets Ltd"
+            type="text"
+            formControlName="organisationName"
+          />
         </div>
 
         <!-- Open Time -->
@@ -34,31 +41,54 @@
             <i class="fa-solid fa-door-open"></i>
             Open Time
           </label>
-          <input class="form-input" type="time" formControlName="openTime" />
+          <input
+            class="form-input"
+            type="time"
+            step="1"
+            formControlName="openTime"
+          />
         </div>
+
         <!-- Break Time -->
         <div class="space-y-2">
           <label class="form-label">
             <i class="fa-solid fa-mug-hot"></i>
             Break Time
           </label>
-          <input class="form-input" type="time" formControlName="breakTime" />
+          <input
+            class="form-input"
+            type="time"
+            step="1"
+            formControlName="breakTime"
+          />
         </div>
+
         <!-- Close Time -->
         <div class="space-y-2">
           <label class="form-label">
             <i class="fa-solid fa-door-closed"></i>
             Close Time
           </label>
-          <input class="form-input" type="time" formControlName="closeTime" />
+          <input
+            class="form-input"
+            type="time"
+            step="1"
+            formControlName="closeTime"
+          />
         </div>
+
         <!-- Admin Name -->
         <div class="space-y-2">
           <label class="form-label">
             <i class="fa-solid fa-user"></i>
             Admin Username
           </label>
-          <input class="form-input" placeholder="John Doe" type="text" formControlName="userName" />
+          <input
+            class="form-input"
+            placeholder="John Doe"
+            type="text"
+            formControlName="userName"
+          />
         </div>
         <!-- Admin First Name -->
         <div class="space-y-2">
@@ -66,7 +96,12 @@
             <i class="fa-solid fa-user"></i>
             Admin First Name
           </label>
-          <input class="form-input" placeholder="John Doe" type="text" formControlName="firstName" />
+          <input
+            class="form-input"
+            placeholder="John Doe"
+            type="text"
+            formControlName="firstName"
+          />
         </div>
         <!-- Admin Last Name -->
         <div class="space-y-2">
@@ -74,7 +109,12 @@
             <i class="fa-solid fa-user"></i>
             Admin Last Name
           </label>
-          <input class="form-input" placeholder="John Doe" type="text" formControlName="lastName" />
+          <input
+            class="form-input"
+            placeholder="John Doe"
+            type="text"
+            formControlName="lastName"
+          />
         </div>
         <!-- Admin Email -->
         <div class="space-y-2">
@@ -82,12 +122,16 @@
             <i class="fa-solid fa-envelope"></i>
             Admin Email
           </label>
-          <input class="form-input" placeholder="admin@company.com" type="email" formControlName="emailId" />
+          <input
+            class="form-input"
+            placeholder="admin@company.com"
+            type="email"
+            formControlName="emailId"
+          />
         </div>
 
         <!-- Passwords -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
           <!-- Password -->
           <div class="space-y-2">
             <label class="form-label">
@@ -95,12 +139,21 @@
               Password
             </label>
             <div class="relative">
-              <input class="form-input pr-12" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
-                formControlName="password" />
-              <button type="button"
+              <input
+                class="form-input pr-12"
+                [type]="showPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                formControlName="password"
+              />
+              <button
+                type="button"
                 class="absolute right-4 top-1/2 -translate-y-1/2 text-charcoal/30 hover:text-primary"
-                (click)="togglePassword()">
-                <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                (click)="togglePassword()"
+              >
+                <i
+                  class="fa-solid"
+                  [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                ></i>
               </button>
             </div>
           </div>
@@ -111,24 +164,37 @@
               <i class="fa-solid fa-shield-halved"></i>
               Confirm
             </label>
-            <input class="form-input" placeholder="••••••••" formControlName="confirmPassword" type="password" />
+            <input
+              class="form-input"
+              placeholder="••••••••"
+              formControlName="confirmPassword"
+              type="password"
+            />
           </div>
         </div>
 
         <!-- Submit -->
-        <button type="submit"
-          class="w-full bg-primary hover:bg-accent-focus text-white font-extrabold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-3 transition-all">
+        <button
+          type="submit"
+          class="w-full bg-primary hover:bg-accent-focus text-white font-extrabold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-3 transition-all"
+        >
           REGISTER ORGANISATION
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </form>
 
       <!-- Terms -->
-      <p class="mt-8 text-[12px] text-center text-charcoal/40 font-medium leading-relaxed px-6">
+      <p
+        class="mt-8 text-[12px] text-center text-charcoal/40 font-medium leading-relaxed px-6"
+      >
         By creating an account, you agree to our
-        <a class="text-muted-gold font-bold hover:text-primary underline">Terms</a>
+        <a class="text-muted-gold font-bold hover:text-primary underline"
+          >Terms</a
+        >
         and
-        <a class="text-muted-gold font-bold hover:text-primary underline">Privacy Policy</a>.
+        <a class="text-muted-gold font-bold hover:text-primary underline"
+          >Privacy Policy</a
+        >.
       </p>
     </div>
 
@@ -136,12 +202,13 @@
     <div class="mt-10 text-center">
       <p class="text-charcoal/60 font-medium">
         Already have an account?
-        <a class="text-primary font-extrabold hover:text-accent-focus ml-1 inline-flex items-center gap-1">
+        <a
+          class="text-primary font-extrabold hover:text-accent-focus ml-1 inline-flex items-center gap-1"
+        >
           Login to IsItFree?
           <i class="fa-solid fa-right-to-bracket text-sm"></i>
         </a>
       </p>
     </div>
-
   </div>
 </main>

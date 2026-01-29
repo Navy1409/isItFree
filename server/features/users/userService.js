@@ -43,13 +43,16 @@ class UserService {
     organisationId,
     isAdmin,
     password,
-    pgClient
+    pgClient=pool
   }) {
     const user = await this.userRepository.getUserByEmail(emailId);
+    let hashed_password=null;
     if (user.length) {
       throw new CustomAPIError("User already exists", StatusCodes.CONFLICT);
     }
-    const hashed_password = await bcrypt.hash(password, 10)
+    if(password){
+     hashed_password = await bcrypt.hash(password, 10)
+    }
     const createdUser = await this.userRepository.createUser(
       userName,
       firstName,

@@ -1,0 +1,89 @@
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+  <!-- LEFT INFO PANEL -->
+  <div class="lg:col-span-4 space-y-6">
+    <div>
+      <h2 class="text-4xl font-extrabold text-charcoal tracking-tight">
+        Offices
+      </h2>
+      <p class="mt-4 text-gray-500 text-lg leading-relaxed">
+        View and manage all registered office locations across your
+        organization.
+      </p>
+    </div>
+
+    <div class="p-6 bg-white border border-border-light rounded-xl space-y-4">
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-circle-info text-primary text-lg"></i>
+        <p class="text-sm text-gray-600">
+          Offices listed here are available for this particular organisation.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE PANEL -->
+  <div class="lg:col-span-8">
+    <div class="bg-white border border-border-light rounded-2xl shadow-sm">
+      <!-- TABLE HEADER -->
+      <div
+        class="px-8 py-6 border-b border-border-light flex items-center justify-between"
+      >
+        <h3 class="text-xl font-extrabold text-charcoal">Registered Offices</h3>
+
+        <button
+        routerLink="../create-office"
+          class="bg-primary hover:bg-[#b08856] text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 transition-all"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Add Office
+        </button>
+      </div>
+
+      <!-- TABLE -->
+      <div class="divide-y divide-border-light">
+        <!-- Header Row -->
+        <div
+          class="grid grid-cols-12 px-8 py-4 text-xs font-black uppercase tracking-[0.15em] text-gray-400"
+        >
+          <div class="col-span-5">Office Name</div>
+          <div class="col-span-5">Location</div>
+          <div class="col-span-2 text-right">Actions</div>
+        </div>
+
+        <!-- Row -->
+        @for (office of offices; track office.officeId) {
+          <div
+            class="grid grid-cols-12 px-8 py-6 items-center hover:bg-off-white transition-colors"
+          >
+            <div class="col-span-5 flex items-center gap-3">
+              <i class="fa-solid fa-building text-primary"></i>
+              <span class="font-semibold text-charcoal">
+                {{ office.officeName }}
+              </span>
+            </div>
+
+            <div class="col-span-5 text-gray-600">
+              {{ office.location }}
+            </div>
+
+            <div class="col-span-2 flex justify-end gap-4">
+              <button
+                class="text-gray-400 hover:text-primary transition-colors"
+                title="View"
+              >
+                <i class="fa-solid fa-eye"></i>
+              </button>
+
+              <button
+                class="text-gray-400 hover:text-primary transition-colors"
+                title="Edit"
+              >
+                <i class="fa-solid fa-pen"></i>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
