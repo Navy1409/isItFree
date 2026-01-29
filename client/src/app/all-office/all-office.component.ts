@@ -59,11 +59,14 @@ export class AllOfficeComponent implements OnInit {
   }
 
   openOffice(office: any) {
-    if (office.isGroup) {
-      this.router.navigate(['/office', office.officeId,this.selectDate, 'book']);
-    } else {
-      this.router.navigate(['/office', office.officeId, this.selectDate]);
-    }
+    const dateStr = this.selectedDate.toLocaleDateString('en-CA');
+
+if (office.isGroup) {
+  this.router.navigate(['/office', office.officeId, dateStr, 'book']);
+} else {
+  this.router.navigate(['/office', office.officeId, dateStr]);
+}
+
   }
 
   getNextWorkingDays(start: Date, count: number): Date[] {

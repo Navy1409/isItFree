@@ -6,19 +6,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OfficeService {
-  private readonly baseUrl='http://localhost:3000/office'
-  constructor( private http:HttpClient) { }
-
-  getAllOffices(organisationId):Observable<any[]>{
-    const token=localStorage.getItem('token')
-    const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`
+  private readonly baseUrl = 'http://localhost:3000/office'
+  constructor(private http: HttpClient) { }
+  token = localStorage.getItem('token')
+  headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
   });
-    return this.http.get<any[]>(`${this.baseUrl}/getOfficesByOrganisationId/${organisationId}`,{headers:headers}
+  getAllOffices(organisationId): Observable<any[]> {
+
+    return this.http.get<any[]>(`${this.baseUrl}/getOfficesByOrganisationId/${organisationId}`, { headers: this.headers }
     )
   }
 
-  getOfficeByOfficeId(officeId):Observable<any>{
-    return this.http.get<any>(`${this.baseUrl}/getOfficeByOfficeId/${officeId}`)
+  getOfficeByOfficeId(officeId): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/getOfficeByOfficeId/${officeId}`, { headers: this.headers })
   }
 }

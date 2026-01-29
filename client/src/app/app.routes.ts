@@ -20,11 +20,11 @@ export const routes: Routes = [
         component:LoginComponent
     },
     {
-        path:'office/:id/:date',
+        path:'office/:officeId/:date',
         component:CabinSeatBookingComponent
     },
     {
-        path:'office/:id/:date/book',
+        path:'office/:officeId/:date/book',
         component:OfficeAvailabilityComponent
     }
 

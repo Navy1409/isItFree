@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { OfficeBookingsService } from '../services/office-bookings.service';
+import { OfficeService } from '../services/office.service';
 
 interface Slot {
   startTime: string;
@@ -13,19 +16,40 @@ interface Slot {
   templateUrl: './office-availability.component.html'
 })
 export class OfficeAvailabilityComponent implements OnInit {
-  office = {
-    officeName: 'Abc-abc',
-    location: '1st floor, corner room',
-    config: { capacity: 20 }
-  };
+  office:any='';
+
+  officeId:string|null='';
+  date:string|null='';
 
   availableSlots: Slot[] = [];
+constructor(private route:ActivatedRoute,private officeBookingService:OfficeBookingsService,private officeService:OfficeService){
 
+}
   ngOnInit() {
-    this.availableSlots = [
-      { startTime: '09:00:00', endTime: '10:00:00' },
-      { startTime: '11:00:00', endTime: '19:00:00' }
-    ];
+    this.officeId=this.route.snapshot.paramMap.get('officeId');
+    this.date=this.route.snapshot.paramMap.get('date')
+    console.log(this.officeId, this.date);
+    this.officeBookingService.getOfficeAvailabilityByOfficeIdAndDate(this.officeId,this.date).subscribe({
+      next:(res:any)=>{
+        console.log(res);
+        
+        this.availableSlots=res;
+
+      },
+      error:err=>{
+        console.log(err?.error?.msg);
+        
+      }
+    })
+    this.officeService.getOfficeByOfficeId(this.officeId).subscribe({
+      next:(res:any)=>{
+        this.office=res[0]
+      },
+      error:err=>{
+        console.log(err?.error?.msg);
+        
+      }
+    })
   }
 
   formatTime(time: string): string {

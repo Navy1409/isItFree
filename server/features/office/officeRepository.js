@@ -44,9 +44,13 @@ class OfficeRepository {
     async getOfficeByOfficeId(officeId) {
         const query = squel
             .select()
-            .from("offices")
-            .field("*")
-            .where('"officeId" = ?', officeId)
+            .from("offices", 'offc')
+            .field("offc.*")
+            .field('org."openTime"')
+            .field('org."closeTime"')
+            .field('org."breakTime"')
+            .where('offc."officeId" = ?', officeId)
+            .join("organisations", 'org', 'org."organisationId"=offc."organisationId"')
             .toParam();
 
         return (await pool.query(query.text, query.values)).rows

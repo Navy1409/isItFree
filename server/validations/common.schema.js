@@ -6,7 +6,9 @@ class CommonValidation {
   }
   uuid = Joi.string().uuid();
   positiveInt = Joi.number().min(1);
-  timeHHMM = Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/);
+  timeHHMMSS = Joi.string().pattern(
+    /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/
+  );
   userId = this.uuid;
   officeId = this.uuid;
   organisationId = this.uuid;
@@ -25,9 +27,8 @@ class CommonValidation {
   location = Joi.string().min(2).max(100);
   isGroup = Joi.boolean();
   bookingDate = Joi.date().iso();
-  time = this.timeHHMM;
+  time = this.timeHHMMSS;
   userIds = Joi.array().items(this.uuid).min(1);
-  half = Joi.string().valid("first half", "second half", "full day");
 }
 
 module.exports = CommonValidation;

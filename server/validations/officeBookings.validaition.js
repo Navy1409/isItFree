@@ -7,7 +7,6 @@ class OfficeBookingsValidation {
 
     const officeId = common.officeId;
     const bookingDate = common.bookingDate;
-    const half = common.half;
     const endTime = common.time;
     const startTime = common.time;
     const userId = common.userId;
@@ -22,7 +21,6 @@ class OfficeBookingsValidation {
     this.bookedSeatsQuerySchema = Joi.object({
       officeId: officeId.required(),
       date: bookingDate.required(),
-      half: half.required()
     });
 
     this.createBookingsSchema = Joi.object({

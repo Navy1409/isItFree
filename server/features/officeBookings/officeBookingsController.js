@@ -9,10 +9,10 @@ class OfficeBookingsController {
   }
 
   getOfficeVacancyByOfficeIdAndBookingDate = async (req, res) => {
-    const payload = req.query;
+    const { officeId, bookingDate } = req.query;
     try {
       const result =
-        await this.officeBookingsService.getOfficeVacancyByOfficeIdAndBookingDate(payload);
+        await this.officeBookingsService.getOfficeVacancyByOfficeIdAndBookingDate({ officeId, bookingDate });
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json({ msg: err.message });
@@ -39,7 +39,7 @@ class OfficeBookingsController {
   getUserCurrentBookings = async (req, res) => {
     const { userId } = req.params;
     try {
-      
+
       const result = await this.officeBookingsService.getCurrentBooking(userId);
       res.status(200).json(result);
     } catch (error) {
@@ -48,10 +48,24 @@ class OfficeBookingsController {
   };
 
   createBookings = async (req, res) => {
-    const payload = req.body;
+    const {
+      userIds,
+      officeId,
+      bookingDate,
+      startTime,
+      endTime,
+      config,
+    } = req.body;
 
     try {
-      const result = await this.officeBookingsService.createBookings(payload);
+      const result = await this.officeBookingsService.createBookings({
+        userIds,
+        officeId,
+        bookingDate,
+        startTime,
+        endTime,
+        config,
+      });
       res.status(200).json(result);
     } catch (err) {
       res.status(500).json({ msg: err.message });
@@ -59,14 +73,13 @@ class OfficeBookingsController {
   };
 
   getBookedSeatsByOfficeIdDateAndTime = async (req, res) => {
-    const { officeId, date, half } = req.query;
+    const { officeId, date } = req.query;
 
     try {
       const result =
         await this.officeBookingsService.getBookedSeatsByOfficeIdDateAndTime(
           officeId,
-          date,
-          String(half).toLowerCase(),
+          date
         );
       res.status(200).json(result);
     } catch (err) {

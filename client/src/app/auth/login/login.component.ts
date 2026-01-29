@@ -37,14 +37,9 @@ export class LoginComponent implements OnInit {
       password: this.password
     }
     this.authService.loginUser(payload).subscribe({
-      next: (res: any) => {
-        console.log(res.token);
-        
+      next: (res: any) => {        
         this.authHelper.decodeToken(res.token);
-        // localStorage.setItem('token', res.token);
-        // localStorage.setItem('userId', decoded.userId);
-        // localStorage.setItem('organisationId', decoded.organisationId);
-        // localStorage.setItem('emailId', decoded.emailId);
+        this.router.navigate(['/'])
       },
       error: err => {
         this.error = err?.error?.msg;

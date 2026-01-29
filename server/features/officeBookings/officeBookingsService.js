@@ -18,19 +18,9 @@ class OfficeBookingsService {
     endTime,
     config,
   }) {
-    const today = new Date().toISOString().slice(0, 10);
-
-    if (bookingDate < today || startTime > endTime) {
-      throw new CustomAPIError("please provide valid Date for booking", 400);
-    } else if (bookingDate === today) {
-      const nowTime = new Date().toISOString().slice(11, 16);
-      if (startTime < nowTime) {
-        throw new CustomAPIError("Please provide valid booking time", 400);
-      }
-    }
-
+    const today = new Date().toLocaleDateString('en-CA').slice(0, 10);
     const office = await this.officeService.getOfficeByOfficeId(officeId);
-    const { openTime, closeTime } =
+    const { openTime, breakTime, closeTime } =
       await this.organisationRepository.getOrganisationTimings(
         office[0]?.organisationId,
       );
@@ -39,6 +29,18 @@ class OfficeBookingsService {
       throw new CustomAPIError(
         "The start and end time in bookings must be in between the organisation timings",
       );
+    }
+
+    if (bookingDate < today || startTime > endTime) {
+      throw new CustomAPIError("please provide valid Date for booking", 400);
+    } else if (bookingDate === today) {
+      const nowTime = new Date().toTimeString().slice(0, 8);
+      if (startTime < nowTime) {
+        if ((startTime < breakTime) || office.isGroup) { throw new CustomAPIError("Please provide valid booking time", 400); }
+        else {
+          startTime = breakTime
+        }
+      }
     }
 
     const isAvailableForGroupBoookings =
@@ -119,7 +121,7 @@ class OfficeBookingsService {
     return results;
   }
 
-  async getOfficeVacancyByOfficeIdAndBookingDate({officeId, bookingDate}) {
+  async getOfficeVacancyByOfficeIdAndBookingDate({ officeId, bookingDate }) {
     const office = await this.officeService.getOfficeByOfficeId(officeId)
     if (!office.length) {
       throw new CustomAPIError("No such office Exists", 400);
@@ -127,37 +129,20 @@ class OfficeBookingsService {
     const { openTime, closeTime } = await this.organisationRepository.getOrganisationTimings(office[0]?.organisationId)
     const existingBookings = await this.officeBookingsRepository.getOfficeBookingTimes(officeId, bookingDate)
     if (!existingBookings.length) {
-      return { openTime, closeTime };
+      const availableBooking = [];
+      availableBooking.push({ startTime: openTime, endTime: closeTime });
+      return availableBooking;
     }
     const availableBooking = this.getAvailability(openTime, closeTime, existingBookings)
     return availableBooking;
   }
 
-  async getBookedSeatsByOfficeIdDateAndTime(officeId, date, half) {
+  async getBookedSeatsByOfficeIdDateAndTime(officeId, date) {
     const office = await this.officeService.getOfficeByOfficeId(officeId);
     if (!office.length) {
       throw new CustomAPIError("No such office Exists", 400);
     }
-    const { openTime, closeTime, breakTime } = await this.organisationRepository.getOrganisationTimings(office[0]?.organisationId);
-    let startTime;
-    let endTime;
-    if (half === 'first half') {
-      startTime = openTime;
-      endTime = breakTime;
-    }
-    else if (half === 'second half') {
-      startTime = breakTime;
-      endTime = closeTime;
-    }
-    else if (half === 'full day') {
-      startTime = openTime;
-      endTime = closeTime
-    }
-    else {
-      throw new CustomAPIError("Select correct timings for seat booking", 400)
-    }
-    const result = await this.officeBookingsRepository.getBookedSeatsByOfficeIdDateAndTime(officeId, date, startTime, endTime)
-
+    const result = await this.officeBookingsRepository.getBookedSeatsByOfficeIdDateAndTime(officeId, date)
     return result;
   }
 
@@ -222,7 +207,7 @@ class OfficeBookingsService {
 
   getAvailability(openTime, closeTime, existingBookings) {
     let currentTime = openTime;
-    const availableBooking=[];
+    const availableBooking = [];
     for (const booking of existingBookings) {
       if (currentTime < booking.startTime) {
         availableBooking.push({
@@ -259,10 +244,10 @@ class OfficeBookingsService {
 
   async getCurrentBooking(userId) {
     const user = await this.userService.getUserById(userId);
-    if(!user){
-      throw new CustomAPIError("The user doesn't exist",404);
+    if (!user) {
+      throw new CustomAPIError("The user doesn't exist", 404);
     }
-    const startDate = new Date().toISOString().slice(0,10);
+    const startDate = new Date().toISOString().slice(0, 10);
     return await this.officeBookingsRepository.getAllBookingsByUserUUID(
       userId,
       startDate,

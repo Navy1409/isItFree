@@ -35,16 +35,16 @@ class officeBookingsRepository {
     return result.rows;
   }
 
-  async getBookedSeatsByOfficeIdDateAndTime(officeId, bookingDate, startTime, endTime) {
+  async getBookedSeatsByOfficeIdDateAndTime(officeId, bookingDate) {
     const query = squel
       .select()
       .from("office_bookings")
       .field("(config->>'row')::int", "row")
       .field("(config->>'column')::int", "column")
+      .field('"startTime"')
+      .field('"endTime"')
       .where('"officeId" = ?', officeId)
       .where('"bookingDate" = ?', bookingDate)
-      .where('"startTime" >= ?', startTime)
-      .where('"endTime" <= ?', endTime)
       .where("(config->>'row') IS NOT NULL")
       .where("(config->>'column') IS NOT NULL")
       .toParam();
