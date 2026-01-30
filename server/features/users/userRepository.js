@@ -93,6 +93,7 @@ class userRepository {
       .field('"firstName"')
       .field('"lastName"')
       .field('"emailId"')
+      .field('"userId"')
       .where('"organisationId"=?', organisationId)
       .toParam();
 

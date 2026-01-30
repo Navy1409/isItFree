@@ -21,6 +21,8 @@
     "@angular/platform-browser-dynamic": "^17.3.12",
     "@angular/router": "^17.3.12",
     "@fortawesome/fontawesome-free": "^7.1.0",
+    "@ng-select/ng-select": "^12.0.7",
+    "ngx-material-timepicker": "^13.1.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

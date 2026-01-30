@@ -29,7 +29,7 @@ class OfficeBookingsValidation {
       bookingDate: bookingDate.required(),
       startTime: startTime.required(),
       endTime: endTime.required(),
-      config: config.required()
+      config: config.optional()
     });
 
     this.userIdParamSchema = Joi.object({

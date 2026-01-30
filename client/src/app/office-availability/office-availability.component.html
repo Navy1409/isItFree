@@ -4,19 +4,17 @@
 
     <section class="mb-10">
       <div class="rounded-2xl bg-white border border-muted-gold/30 shadow-lg p-8">
-        <span
-          class="inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold"
-        >
+        <span class="inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">
           ● Available
         </span>
 
         <h2 class="text-4xl font-bold text-primary mt-3">
-          {{ office.officeName }}
+          {{ office?.officeName }}
         </h2>
 
         <div class="flex gap-6 text-sm text-charcoal/70 mt-3">
-          <span>Location: {{ office.location }}</span>
-          <span>Capacity: {{ office.config.capacity }}</span>
+          <span>Location: {{ office?.location }}</span>
+          <span>Capacity: {{ office?.config?.capacity }}</span>
         </div>
       </div>
     </section>
@@ -31,11 +29,8 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-        <div
-          *ngFor="let slot of availableSlots"
-          class="p-6 rounded-xl bg-white border border-muted-gold/30
-                 hover:border-primary transition cursor-pointer"
-        >
+        <div *ngFor="let slot of availableSlots" class="p-6 rounded-xl bg-white border border-muted-gold/30
+                 hover:border-primary transition cursor-pointer">
           <p class="text-lg font-bold text-primary">
             {{ formatTime(slot.startTime) }} – {{ formatTime(slot.endTime) }}
           </p>
@@ -44,24 +39,101 @@
             Available
           </p>
 
-          <button
-            (click)="bookSlot(slot)"
-            class="mt-4 w-full py-2.5 rounded-lg bg-primary text-white font-semibold
-                   hover:bg-accent-focus transition"
-          >
+          <button (click)="bookSlot(slot)" class="mt-4 w-full py-2.5 rounded-lg bg-primary text-white font-semibold
+                   hover:bg-accent-focus transition">
             Book Slot
           </button>
         </div>
 
       </div>
 
-      <div
-        *ngIf="!availableSlots.length"
-        class="text-center text-charcoal/60 py-16"
-      >
+      <div *ngIf="!availableSlots.length" class="text-center text-charcoal/60 py-16">
         No slots available for this date
       </div>
 
     </section>
   </main>
+</div>
+<div *ngIf="isBookingModalOpen && selectedSlot"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+
+  <div class="w-full max-w-[480px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-8">
+
+    <!-- Header -->
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h3 class="text-2xl font-black text-charcoal">Confirm Booking</h3>
+        <p class="text-sm text-gray-500 mt-1">Review your reservation details</p>
+      </div>
+      <button (click)="closeModal()" class="p-1 text-gray-400 hover:text-charcoal">
+        ✕
+      </button>
+    </div>
+
+    <!-- Summary -->
+    <div class="space-y-4 mb-8">
+      <div class="p-4 bg-gray-50 rounded-xl border">
+        <div class="flex justify-between mb-2">
+          <span class="text-xs font-bold text-gray-400 uppercase">Date</span>
+          <span class="text-sm font-bold">{{ date }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-xs font-bold text-gray-400 uppercase">Allowed Slot</span>
+          <span class="text-sm font-bold text-primary">
+            {{ selectedSlot.startTime }} - {{ selectedSlot.endTime }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Start Time -->
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">Start Time</label>
+
+        <input class="w-full rounded-lg border-gray-200 py-3 text-sm" [ngxTimepicker]="startPicker"
+          [(ngModel)]="bookingForm.startTime" readonly />
+
+        <ngx-material-timepicker #startPicker [format]="24" [minutesGap]="15">
+        </ngx-material-timepicker>
+
+
+      </div>
+
+      <!-- End Time -->
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">End Time</label>
+        <input class="w-full rounded-lg border-gray-200 py-3 text-sm" [ngxTimepicker]="endPicker"
+          [(ngModel)]="bookingForm.endTime" readonly />
+
+        <ngx-material-timepicker #endPicker [format]="24" [minutesGap]="15">
+        </ngx-material-timepicker>
+
+
+      </div>
+
+      <!-- Users -->
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">Invite Users</label>
+        <ng-select [items]="orgUsers" bindLabel="name" bindValue="id" [(ngModel)]="bookingForm.selectedUsers"
+          [multiple]="true" [searchable]="true" [closeOnSelect]="false" placeholder="Select users...">
+        </ng-select>
+      </div>
+    </div>
+
+    <div *ngIf="!isTimeValid()" class="pb-4">
+      <p  class="text-red-700">!!! {{getBookingError()}}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col gap-3">
+      <button (click)="confirmBooking()" [disabled]="!isTimeValid() || bookingForm.selectedUsers.length === 0"
+        class="w-full h-12 bg-primary text-white font-bold rounded-xl disabled:opacity-40">
+        Confirm Booking
+      </button>
+
+      <button (click)="closeModal()" class="w-full h-12 text-gray-400 font-bold">
+        Cancel
+      </button>
+    </div>
+
+  </div>
 </div>
