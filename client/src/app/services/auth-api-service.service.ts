@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,4 +17,7 @@ export class AuthApiServiceService {
     return this.http.post<any>(`${this.BASE_URL}/login`, payload);
   }
 
+  setPassword(payload:any):Observable<any>{
+    return this.http.patch(`${this.BASE_URL}/setPassword`, payload);
+  }
 }

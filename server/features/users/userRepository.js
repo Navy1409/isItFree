@@ -85,6 +85,18 @@ class userRepository {
     const result = await pool.query(query.text, query.values);
     return result;
   }
+  setPassword = async (emailId, hashed_password)=>{
+    const query= squel
+    .update()
+    .table("users")
+    .where('"emailId"=?', emailId)
+    .set("password",hashed_password)
+    .returning('"emailId"')
+    .toParam();
+
+    const result = await pool.query(query.text, query.values);
+    return result.rows[0];
+  }
   getUserByOrganisationId = async (organisationId) => {
     const query = squel
       .select()

@@ -35,6 +35,15 @@ class UserService {
     }
     return user;
   }
+  async setPassword({emailId,password}){
+    const user= await this.getUserByEmail(emailId);
+    if(!user.length){
+      throw new CustomAPIError('There is no user of this emailId', 400);
+    }
+    const hashed_password = await bcrypt.hash(password, 10);
+    const result= await this.userRepository.setPassword(emailId,hashed_password);
+    return result;
+  }
   async createUser({
     userName,
     firstName,

@@ -77,6 +77,17 @@ class UserController {
         }
     }
 
+    setPassword = async (req, res)=>{
+        const payload=req.body;
+        try{
+            const response= await this.userService.setPassword(payload);
+            res.status(StatusCodes.OK).json(response);
+        }
+        catch(error){
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: error.message});
+        }
+    }
+
     register = async (req, res, next) => {
         const pgClient = await pool.connect();
         try {

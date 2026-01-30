@@ -11,6 +11,7 @@ import { CreateOfficeComponent } from './admin/create/create-office/create-offic
 import { ViewUsersComponent } from './admin/create/view-users/view-users.component';
 import { ViewOfficesComponent } from './admin/create/view-offices/view-offices.component';
 import { authGuardGuard } from './guard/auth-guard.guard';
+import { SetPasswordComponent } from './auth/set-password/set-password.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component:LoginComponent
+    },
+    {
+        path:'set-password',
+        component:SetPasswordComponent
     },
     {
         path:'office/:officeId/:date',
