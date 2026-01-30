@@ -1,19 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthServiceService {
   private readonly STORAGE_KEY = 'user';
+  private loggedIn$ = new BehaviorSubject<boolean>(
+    !!localStorage.getItem(this.STORAGE_KEY)
+  );
+  private admin$ = new BehaviorSubject<boolean>(
+    JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '{}')?.isAdmin ?? false
+  );
 
   constructor() { }
+ 
    decodeToken(token: string) {
     const payload = token.split('.')[1];
-    console.log(payload);
-    
-    const decoded = atob(payload);
-    const data= JSON.parse(decoded);
-    this.setUser(token,data)
+    const decoded = JSON.parse(atob(payload));
+    this.setUser(token, decoded);
   }
   setUser(token,data: {
     token: string;
@@ -22,23 +25,28 @@ export class AuthServiceService {
     isAdmin: boolean;
     emailId: string;
   }) {
-    localStorage.setItem("token", token)
+    localStorage.setItem('token', token);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-  }
-   getUser() {
-    return JSON.parse(localStorage.getItem('user') || 'null');
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getUser();
+    this.loggedIn$.next(true);
+    this.admin$.next(!!data.isAdmin);
   }
 
-  isAdmin(): boolean {
-    return this.getUser()?.isAdmin;
+  getUser() {
+    return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || 'null');
+  }
+
+  loggedInChanges() {
+    return this.loggedIn$.asObservable();
+  }
+  
+  adminChanges() {
+    return this.admin$.asObservable();
   }
 
   logout(){
     localStorage.removeItem(this.STORAGE_KEY);
     localStorage.removeItem('token');
+    this.loggedIn$.next(false);
+    this.admin$.next(false);
   }
 }

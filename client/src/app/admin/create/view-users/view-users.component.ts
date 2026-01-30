@@ -39,8 +39,8 @@ export class ViewUsersComponent implements OnInit {
 
         },
         error: (err) => {
-          console.log(err);
-        }
+        alert(err?.error?.msg || 'Update failed');
+      }
       });
   }
 
@@ -90,7 +90,7 @@ export class ViewUsersComponent implements OnInit {
         this.getUsers();
       },
       error: (err) => {
-        alert(err?.error?.message || 'Update failed');
+        alert(err?.error?.msg || 'Update failed');
       }
     });
     this.isEditModalOpen = false;

@@ -41,9 +41,8 @@ export class LoginComponent implements OnInit {
         this.authHelper.decodeToken(res.token);
         this.router.navigate(['/'])
       },
-      error: err => {
-        this.error = err?.error?.msg;
-        console.log(this.error);
+      error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
       }
     })
   }

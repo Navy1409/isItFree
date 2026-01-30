@@ -50,10 +50,8 @@ export class AllOfficeComponent implements OnInit {
 
       }
       ,
-      error: err => {
-        this.error = err?.error?.msg;
-        console.log(err);
-
+     error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
       }
     })
   }

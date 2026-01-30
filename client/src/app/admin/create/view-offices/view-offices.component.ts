@@ -25,9 +25,8 @@ export class ViewOfficesComponent implements OnInit {
         console.log("Offices",this.offices);
         
       },
-      error:(err)=>{
-        console.log(err);
-        
+      error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
       }
     })
   }

@@ -41,8 +41,8 @@ export class CreateUserComponent {
         console.log("User Created")
         window.location.reload();
       },
-      error:err=>{
-        console.error(err)
+     error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
       }
     })
   }

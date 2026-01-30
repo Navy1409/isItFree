@@ -49,7 +49,9 @@ export class CabinSeatBookingComponent implements OnInit {
         this.updateTimeRange();
         this.loadBookingsForDay();
       },
-      error: err => console.error(err)
+      error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
+      }
     });
   }
 
@@ -61,7 +63,9 @@ export class CabinSeatBookingComponent implements OnInit {
           this.bookings = res;
           console.log('Bookings:', this.bookings);
         },
-        error: err => console.error(err)
+        error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
+      }
       });
   }
   generateSeats(config: { row: number; column: number }) {
@@ -243,7 +247,7 @@ export class CabinSeatBookingComponent implements OnInit {
         this.loadBookingsForDay();
       },
       error: err => {
-        alert(err?.error?.message || 'Booking failed');
+        alert(err?.error?.msg || 'Booking failed');
       }
     });
   }

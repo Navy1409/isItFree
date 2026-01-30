@@ -31,8 +31,8 @@ export class SetPasswordComponent {
         console.log("Success")
         this.router.navigate(['/login'])
       },
-      error:(err)=>{
-        console.log(err);
+      error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
       }
     })
   }

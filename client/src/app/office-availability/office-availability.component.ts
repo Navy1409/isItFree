@@ -59,7 +59,9 @@ export class OfficeAvailabilityComponent implements OnInit {
         console.log(this.orgUsers);
 
       },
-      error: err => console.error(err?.error?.msg)
+      error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
+      }
     });
 
   }
@@ -71,7 +73,9 @@ export class OfficeAvailabilityComponent implements OnInit {
         next: (res: Slot[]) => {
           this.availableSlots = res || [];
         },
-        error: err => console.error(err)
+        error: (err) => {
+        alert(err?.error?.msg || 'Update failed');
+      }
       });
   }
 
@@ -212,7 +216,7 @@ export class OfficeAvailabilityComponent implements OnInit {
         this.getOfficeAvailability();
       },
       error: err => {
-        alert(err?.error?.message || 'Booking failed');
+        alert(err?.error?.msg || 'Booking failed');
       }
     });
     this.closeModal();

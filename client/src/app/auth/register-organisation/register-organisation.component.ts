@@ -66,8 +66,8 @@ export class RegisterOrganisationComponent implements OnInit {
         this.router.navigate(['/']);
       },
       error: (err) => {
-        console.error('registration failed', err);
-      },
+        alert(err?.error?.msg || 'Update failed');
+      }
     });
   }
 }

@@ -16,10 +16,17 @@ export class AppComponent implements OnInit {
   isAdmin=false;
   panel="Admin Panel"
   inUserPanel=true;
+  isLoggedIn=false;
   constructor(private authService:AuthServiceService, private router:Router){}
 
   ngOnInit(): void {
-    this.isAdmin=this.authService.getUser().isAdmin;    
+    this.authService.loggedInChanges().subscribe(
+      status => this.isLoggedIn = status
+    );
+
+    this.authService.adminChanges().subscribe(
+      isAdmin => this.isAdmin = isAdmin
+    );
   }
 
   changePanel(){
