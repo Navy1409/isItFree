@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-office',
@@ -13,7 +14,7 @@ import { AdminService } from '../../../services/admin.service';
 export class CreateOfficeComponent {
 
   createOfficeForm:FormGroup;
-  constructor(private fb:FormBuilder, private adminService: AdminService){
+  constructor(private fb:FormBuilder, private adminService: AdminService, private router: Router){
     this.createOfficeForm=fb.group({
       officeName:['', Validators.required],
       location:['',Validators.required],
@@ -35,7 +36,7 @@ export class CreateOfficeComponent {
     .subscribe({
       next:()=>{
         console.log("Office Created");
-        window.location.reload();
+        this.router.navigate(['/admin/dashboard/view-offices'])
       },
       error: (err) => {
         alert(err?.error?.msg || 'Update failed');

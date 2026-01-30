@@ -39,7 +39,7 @@ export class CreateUserComponent {
     .subscribe({
       next:()=>{
         console.log("User Created")
-        window.location.reload();
+        this.router.navigate(['/admin/dashboard/view-users'])
       },
      error: (err) => {
         alert(err?.error?.msg || 'Update failed');

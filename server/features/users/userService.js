@@ -52,7 +52,7 @@ class UserService {
     organisationId,
     isAdmin,
     password,
-    pgClient=pool
+    pgClient
   }) {
     const user = await this.userRepository.getUserByEmail(emailId);
     let hashed_password=null;
