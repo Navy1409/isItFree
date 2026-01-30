@@ -39,7 +39,7 @@ export class CreateOfficeComponent {
         this.router.navigate(['/admin/dashboard/view-offices'])
       },
       error: (err) => {
-        alert(err?.error?.msg || 'Update failed');
+        alert(err?.error|| 'Update failed');
       }
     })
   }

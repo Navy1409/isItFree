@@ -19,8 +19,11 @@ class OfficeService {
     }
     // const jsonConfig = JSON.parse(config);
     const jsonConfig = config;
-    if ((!jsonConfig.row, !jsonConfig.colum, !jsonConfig.capacity)) {
+    if ((!jsonConfig.row, !jsonConfig.column, !jsonConfig.capacity)) {
       throw new CustomAPIError("Enter valid config", 400);
+    }
+    if((jsonConfig.row*jsonConfig.column)<jsonConfig.capacity){
+      throw new CustomAPIError("Enter valid row and column count as ther are less than capcity")
     }
     const organisation =
       await this.organisationService.getOrganisationByOrganisationId(

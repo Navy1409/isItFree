@@ -41,7 +41,7 @@ class userRepository {
     organisationId,
     isAdmin = false,
     password = null,
-    pgClient= pool
+    pgClient=pool
   ) => {
     const query = squel
       .insert()
