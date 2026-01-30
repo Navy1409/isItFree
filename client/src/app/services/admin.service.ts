@@ -55,4 +55,7 @@ export class AdminService {
     
     return this.http.get(`${this.baseURL}/office/getOfficesByOrganisationId/${organisationId}`)
   }
+  updateUser(userId,payload):Observable<any>{
+    return this.http.patch(`${this.baseURL}/user/updateUser/${userId}`, payload)
+  }
 }

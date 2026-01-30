@@ -51,7 +51,7 @@
     }
 
     <!-- USER ROWS -->
-    @for (user of users; track user.username) {
+    @for (user of users; track user.userName) {
       <div
         class="grid grid-cols-12 px-8 py-5 items-center hover:bg-off-white transition-colors"
       >
@@ -59,7 +59,7 @@
         <div class="col-span-4 flex items-center gap-3">
           <i class="fa-solid fa-user text-primary"></i>
           <span class="font-semibold text-charcoal">
-            {{ user.username }}
+            {{ user.userName }}
           </span>
         </div>
 
@@ -84,7 +84,7 @@
 
           <button
             class="text-gray-400 hover:text-primary transition-colors"
-            title="Edit"
+            title="Edit" (click)="openEditUser(user)"
           >
             <i class="fa-solid fa-pen"></i>
           </button>
@@ -93,3 +93,97 @@
     }
   </div>
 </div>
+@if (isEditModalOpen && selectedUser) {
+  <div
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay"
+>
+  <div class="w-full max-w-[480px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-8">
+
+    <!-- Header -->
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h3 class="text-2xl font-black text-charcoal">
+          Edit User Details
+        </h3>
+        <p class="text-sm text-gray-500 mt-1">
+          Update user information
+        </p>
+      </div>
+      <button
+        (click)="closeEditModal()"
+        class="p-1 text-gray-400 hover:text-charcoal"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-4 mb-8">
+
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">
+          Username
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="editForm.userName"
+          class="w-full px-3 rounded-lg border-gray-200 py-3 text-sm"
+        />
+      </div>
+
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">
+          First Name
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="editForm.firstName"
+          class="w-full rounded-lg px-3 border-gray-200 py-3 text-sm"
+        />
+      </div>
+
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">
+          Last Name
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="editForm.lastName"
+          class="w-full rounded-lg px-3 border-gray-200 py-3 text-sm"
+        />
+      </div>
+
+      <div>
+        <label class="text-xs font-bold text-gray-400 uppercase">
+          Email
+        </label>
+        <input
+          type="email"
+          [(ngModel)]="editForm.emailId"
+          class="w-full rounded-lg px-3 border-gray-200 py-3 text-sm"
+        />
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col gap-3">
+      <button
+        (click)="saveUserChanges()"
+        class="w-full h-12 bg-primary text-white font-bold rounded-xl hover:bg-primary/90"
+      >
+        Save Changes
+      </button>
+
+      <button
+        (click)="closeEditModal()"
+        class="w-full h-12 text-gray-400 font-bold"
+      >
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
+}
+
