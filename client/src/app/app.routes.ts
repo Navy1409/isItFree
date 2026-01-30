@@ -14,8 +14,9 @@ import { authGuardGuard } from './guard/auth-guard.guard';
 
 export const routes: Routes = [
     {
-        path:'',
-        component:AllOfficeComponent
+        path:'user-dashboard',
+        component:AllOfficeComponent,
+        canActivate:[authGuardGuard]
     },
     {
         path: 'register',
@@ -27,11 +28,13 @@ export const routes: Routes = [
     },
     {
         path:'office/:officeId/:date',
-        component:CabinSeatBookingComponent
+        component:CabinSeatBookingComponent,
+        canActivate:[authGuardGuard]
     },
     {
         path:'office/:officeId/:date/book',
-        component:OfficeAvailabilityComponent
+        component:OfficeAvailabilityComponent,
+        canActivate:[authGuardGuard]
     },
     {
         path:'admin/dashboard',
@@ -60,6 +63,11 @@ export const routes: Routes = [
                 pathMatch:'full'
             }
         ]
+    },
+    {
+        path:'',
+        redirectTo:'user-dashboard',
+        pathMatch:'full',
     }
 
 ];

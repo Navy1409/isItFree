@@ -41,7 +41,6 @@ export class RegisterOrganisationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger;
     this.token = localStorage.getItem('user')
     if (this.token) {
       this.router.navigate(['/'])
