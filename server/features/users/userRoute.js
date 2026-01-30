@@ -14,6 +14,7 @@ router.route('/getUserById/:userId').get(authenticate, validate(userSchema.userI
 router.route('/deleteUser/:userId').delete(authenticate, validate(userSchema.userIdParamSchema, "params"), authorisation, userController.deleteUser);
 router.route('/getUserByOrganisationId').get(authenticate, userController.getUserByOrganisationId);
 router.route('/login').post(validate(userSchema.loginSchema), userController.login);
-router.route('/register').post(validate(userSchema.registerSchema), userController.register)
+router.route('/register').post(validate(userSchema.registerSchema), userController.register);
+router.route('/setPassword').patch(userController.setPassword)
 
 module.exports = router;
